@@ -84,25 +84,40 @@
             };
         }
 
-        function animar(c) {
-            let frame = 1;
-            let intervalo = setInterval(() => {
-                let img = new Image();
-                img.src = `${c.nome}/quadro${frame.toString().padStart(4, '0')}.png`;
-                img.onload = () => {
-                    // Limpa e redesenha o frame
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                };
-                
-                frame++;
-                if (frame > c.total) {
-                    clearInterval(intervalo);
-                    indiceAtual++;
-                    iniciarCabo();
-                }
-            }, 50);
+        // Adicione esta lista para guardar os cabos finalizados
+let cabosConcluidos = [];
+
+function animar(c) {
+    let frame = 1;
+    let intervalo = setInterval(() => {
+        let img = new Image();
+        img.src = `${c.nome}/quadro${frame.toString().padStart(4, '0')}.png`;
+        
+        img.onload = () => {
+            // Limpa o canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // 1. Redesenha todos os cabos já finalizados
+            cabosConcluidos.forEach(cabo => {
+                let imgConcluido = new Image();
+                imgConcluido.src = `${cabo.nome}/quadro${cabo.total.toString().padStart(4, '0')}.png`;
+                ctx.drawImage(imgConcluido, 0, 0, canvas.width, canvas.height);
+            });
+            
+            // 2. Desenha o frame atual do cabo novo
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        };
+        
+        frame++;
+        if (frame > c.total) {
+            clearInterval(intervalo);
+            // Salva este cabo na lista de concluídos antes de avançar
+            cabosConcluidos.push(c); 
+            indiceAtual++;
+            iniciarCabo();
         }
+    }, 50);
+}
 
         iniciarCabo();
     </script>
