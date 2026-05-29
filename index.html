@@ -76,11 +76,10 @@
         if (indiceAtual >= cabos.length) return;
         const c = cabos[indiceAtual];
         
-        // Reset e exibição dos conectores (Controle centralizado)
+        // Exibe os conectores apenas no início
         conFase2.style.display = (c.nome === "FASE_2") ? "block" : "none";
         conNeutro.style.display = (c.nome === "NEUTRO_2") ? "block" : "none";
         
-        // Configuração fixa das bolinhas
         b1.style.display = "block";
         b1.style.backgroundColor = c.cor;
         b1.style.left = c.b1.x + "%"; 
@@ -90,6 +89,7 @@
         b2.style.backgroundColor = c.cor;
         
         b1.onclick = () => {
+            b1.style.backgroundColor = "green"; // Cor verde restaurada
             b2.style.left = c.b2.x + "%"; 
             b2.style.top = c.b2.y + "%";
             b2.style.display = "block";
@@ -113,12 +113,9 @@
             };
             if (++frame > c.total) {
                 clearInterval(intv);
-                // Conectores só somem após o término da animação
-                conFase2.style.display = "none";
-                conNeutro.style.display = "none";
-                
                 cabosConcluidos.push(c);
                 indiceAtual++;
+                // Oculta os conectores apenas quando o próximo cabo começar
                 setTimeout(iniciarCabo, 500); 
             }
         }, 50);
