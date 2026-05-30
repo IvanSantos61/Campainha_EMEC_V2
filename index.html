@@ -17,7 +17,7 @@
 
         #game-container { 
             position: relative; 
-            width: 100%; /* Agora herda a largura do main-layout */
+            width: 100%; 
             aspect-ratio: 1920 / 1080; 
             background: url('ambiente.jpg') no-repeat center center; 
             background-size: contain; 
@@ -63,14 +63,27 @@
 </div>
 
 <script>
-    // Toda sua lógica original preservada
+    // Mantém os disjuntores travados
     function habilitarTroca(id, offImg, onImg) {
         const el = document.getElementById(id);
         if(el) el.onclick = () => { el.src = el.src.includes(offImg) ? onImg : offImg; };
     }
+    
+    // Comportamento de impulso para a campainha
+    function habilitarImpulso(id, offImg, onImg) {
+        const el = document.getElementById(id);
+        if (el) {
+            el.onmousedown = () => { el.src = onImg; };
+            el.onmouseup = () => { el.src = offImg; };
+            el.onmouseleave = () => { el.src = offImg; };
+            el.ontouchstart = () => { el.src = onImg; };
+            el.ontouchend = () => { el.src = offImg; };
+        }
+    }
+
     habilitarTroca("btn_dg", "al_dg_off.png", "al_dg_on.png");
     habilitarTroca("btn_dr", "al_dr_off.png", "al_dr_on.png");
-    habilitarTroca("btn_int", "tec_int_off.png", "tec_int_on.png");
+    habilitarImpulso("btn_int", "tec_int_off.png", "tec_int_on.png");
 
     const cabos = [
         { nome: "FASE_REDE", total: 64, b1: {x: 26, y: 38}, b2: {x: 97.5, y: 15}, cor: "red" },
