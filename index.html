@@ -48,13 +48,13 @@
         .conector { position: absolute; width: 5.2%; z-index: 999 !important; display: none; }
         #btn_dg, #btn_dr, #btn_int { position: absolute; z-index: 990; cursor: pointer; width: 5.7%; }
 
-        /* Hotspots */
+        /* Hotspots Retangulares */
         .hotspot {
-            position: absolute; width: 2.5vw; height: 2.5vw; background: rgba(0, 255, 255, 0.2);
-            border: 2px solid #00ffff; border-radius: 50%; cursor: pointer;
-            z-index: 2000; transition: all 0.3s;
+            position: absolute; background: rgba(0, 255, 255, 0.1);
+            border: 1px solid #00ffff; cursor: pointer; z-index: 2000; transition: all 0.3s;
         }
-        .hotspot:hover { background: rgba(0, 255, 255, 0.6); transform: scale(1.2); }
+        .hotspot:hover { background: rgba(0, 255, 255, 0.3); border-width: 2px; }
+        
         #info-box {
             position: absolute; top: 5%; left: 35%; width: 30%; padding: 1vw;
             background: rgba(0, 0, 0, 0.9); border: 2px solid #00ffff; color: #00ffff;
@@ -80,19 +80,19 @@
         <div id="status-bar">REDE: CLIQUE NA REFERÊNCIA INDICADA NO BARRAMENTO PARA INICIAR A PASSAGEM DO NEUTRO</div>
 
         <div id="game-container">
-            <div class="hotspot" style="top: 10%; left: 10%;" onmouseover="mostrarInfo('REDE ELÉTRICA')" onmouseout="esconderInfo()"></div>
-            <div class="hotspot" style="top: 10%; left: 20%;" onmouseover="mostrarInfo('BARRA DE ATERRAMENTO')" onmouseout="esconderInfo()"></div>
-            <div class="hotspot" style="top: 20%; left: 10%;" onmouseover="mostrarInfo('DISJUNTOR GERAL')" onmouseout="esconderInfo()"></div>
-            <div class="hotspot" style="top: 20%; left: 20%;" onmouseover="mostrarInfo('DPS')" onmouseout="esconderInfo()"></div>
-            <div class="hotspot" style="top: 30%; left: 10%;" onmouseover="mostrarInfo('DISPOSITIVO DR')" onmouseout="esconderInfo()"></div>
-            <div class="hotspot" style="top: 30%; left: 20%;" onmouseover="mostrarInfo('DISJUNTORES DOS CIRCUITOS')" onmouseout="esconderInfo()"></div>
-            <div class="hotspot" style="top: 40%; left: 10%;" onmouseover="mostrarInfo('BARRA DE NEUTRO')" onmouseout="esconderInfo()"></div>
-            <div class="hotspot" style="top: 50%; left: 10%;" onmouseover="mostrarInfo('CAIXA DE PASSAGEM 4x2')" onmouseout="esconderInfo()"></div>
-            <div class="hotspot" style="top: 50%; left: 15%;" onmouseover="mostrarInfo('CAIXA DE PASSAGEM 4x2')" onmouseout="esconderInfo()"></div>
-            <div class="hotspot" style="top: 50%; left: 20%;" onmouseover="mostrarInfo('CAIXA DE PASSAGEM 4x2')" onmouseout="esconderInfo()"></div>
-            <div class="hotspot" style="top: 50%; left: 25%;" onmouseover="mostrarInfo('CAIXA DE PASSAGEM 4x2')" onmouseout="esconderInfo()"></div>
-            <div class="hotspot" style="top: 70%; left: 80%;" onmouseover="mostrarInfo('CAMPAINHA 127V')" onmouseout="esconderInfo()"></div>
-            <div class="hotspot" style="top: 80%; left: 80%;" onmouseover="mostrarInfo('INTERRUPTOR DE PULSO')" onmouseout="esconderInfo()"></div>
+            <div class="hotspot" style="top: 10%; left: 5%; width: 8vw; height: 4vw;" onmouseover="mostrarInfo('REDE ELÉTRICA')" onmouseout="esconderInfo()"></div>
+            <div class="hotspot" style="top: 10%; left: 15%; width: 8vw; height: 4vw;" onmouseover="mostrarInfo('BARRA DE ATERRAMENTO')" onmouseout="esconderInfo()"></div>
+            <div class="hotspot" style="top: 20%; left: 5%; width: 6vw; height: 4vw;" onmouseover="mostrarInfo('DISJUNTOR GERAL')" onmouseout="esconderInfo()"></div>
+            <div class="hotspot" style="top: 20%; left: 15%; width: 6vw; height: 4vw;" onmouseover="mostrarInfo('DPS')" onmouseout="esconderInfo()"></div>
+            <div class="hotspot" style="top: 30%; left: 5%; width: 6vw; height: 4vw;" onmouseover="mostrarInfo('DISPOSITIVO DR')" onmouseout="esconderInfo()"></div>
+            <div class="hotspot" style="top: 30%; left: 15%; width: 6vw; height: 4vw;" onmouseover="mostrarInfo('DISJUNTORES DOS CIRCUITOS')" onmouseout="esconderInfo()"></div>
+            <div class="hotspot" style="top: 40%; left: 5%; width: 8vw; height: 3vw;" onmouseover="mostrarInfo('BARRA DE NEUTRO')" onmouseout="esconderInfo()"></div>
+            <div class="hotspot" style="top: 50%; left: 5%; width: 4vw; height: 4vw;" onmouseover="mostrarInfo('CAIXA DE PASSAGEM 4x2')" onmouseout="esconderInfo()"></div>
+            <div class="hotspot" style="top: 50%; left: 10%; width: 4vw; height: 4vw;" onmouseover="mostrarInfo('CAIXA DE PASSAGEM 4x2')" onmouseout="esconderInfo()"></div>
+            <div class="hotspot" style="top: 50%; left: 15%; width: 4vw; height: 4vw;" onmouseover="mostrarInfo('CAIXA DE PASSAGEM 4x2')" onmouseout="esconderInfo()"></div>
+            <div class="hotspot" style="top: 50%; left: 20%; width: 4vw; height: 4vw;" onmouseover="mostrarInfo('CAIXA DE PASSAGEM 4x2')" onmouseout="esconderInfo()"></div>
+            <div class="hotspot" style="top: 70%; left: 75%; width: 8vw; height: 6vw;" onmouseover="mostrarInfo('CAMPAINHA 127V')" onmouseout="esconderInfo()"></div>
+            <div class="hotspot" style="top: 80%; left: 75%; width: 6vw; height: 4vw;" onmouseover="mostrarInfo('INTERRUPTOR DE PULSO')" onmouseout="esconderInfo()"></div>
             
             <div id="info-box"></div>
 
@@ -113,7 +113,6 @@
     const somConexao = new Audio('conexao.mp3');
     const somCampainha = new Audio('campainha.mp3');
 
-    // Funções de Hover
     function mostrarInfo(nome) {
         const box = document.getElementById('info-box');
         box.innerText = nome;
