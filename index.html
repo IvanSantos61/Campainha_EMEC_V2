@@ -3,12 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <style>
-        body { margin: 0; background: #000; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        body { margin: 0; background: #000; display: flex; justify-content: center; align-items: center; min-height: 100vh; flex-direction: column; }
         
+        #main-layout { width: 90vw; max-width: 1920px; display: flex; flex-direction: column; align-items: center; }
+        
+        #titulo-header { color: #00ffff; font-family: sans-serif; font-size: 3.5vw; margin: 1vw 0; text-transform: uppercase; text-shadow: 0 0 10px #00ffff; }
+        
+        #status-bar { 
+            width: 100%; border: 2px solid #333; padding: 1.5vw; box-sizing: border-box; 
+            margin-bottom: 1vw; color: #ff8800; font-family: sans-serif; font-weight: bold; 
+            text-align: center; font-size: 1.2vw;
+        }
+
         #game-container { 
             position: relative; 
-            width: 90vw; 
-            max-width: 1920px; 
+            width: 100%; /* Agora herda a largura do main-layout */
             aspect-ratio: 1920 / 1080; 
             background: url('ambiente.jpg') no-repeat center center; 
             background-size: contain; 
@@ -17,7 +26,6 @@
         
         canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
         
-        /* CORREÇÃO: Borda branca mantida, com box-sizing para o zoom não deformar */
         .bolinha { 
             width: 2%; 
             aspect-ratio: 1/1; 
@@ -25,9 +33,9 @@
             position: absolute; 
             cursor: pointer; 
             display: none; 
-            border: 0.2vw solid white; /* Borda proporcional ao zoom usando vw */
+            border: 0.2vw solid white; 
             z-index: 1000; 
-            box-sizing: border-box; /* O segredo para a borda não inflar o tamanho */
+            box-sizing: border-box;
         }
         
         .conector { position: absolute; width: 5.2%; z-index: 999 !important; display: none; }
@@ -36,20 +44,26 @@
 </head>
 <body>
 
-<div id="game-container">
-    <img id="derivacao_fase2" class="conector" src="con_derivacao.png" style="top: 13.3%; left: 71%;">
-    <img id="derivacao_neutro" class="conector" src="con_derivacao.png" style="top: 10.2%; left: 91.5%;">
-    
-    <img id="btn_dg" src="al_dg_off.png" style="top: 26%; left: 12%; width: 3.9%;">
-    <img id="btn_dr" src="al_dr_off.png" style="top: 28.6%; left: 23.4%;">
-    <img id="btn_int" src="tec_int_off.png" style="top: 67.8%; left: 63.5%;">
-    
-    <canvas id="canvasCabo" width="1920" height="1080"></canvas>
-    <div id="bolinha1" class="bolinha"></div>
-    <div id="bolinha2" class="bolinha"></div>
+<div id="main-layout">
+    <h1 id="titulo-header">LABORATÓRIO SMT PRO</h1>
+    <div id="status-bar">REDE: CLIQUE NA REFERÊNCIA INDICADA NO BARRAMENTO PARA INICIAR A PASSAGEM DO NEUTRO</div>
+
+    <div id="game-container">
+        <img id="derivacao_fase2" class="conector" src="con_derivacao.png" style="top: 13.3%; left: 71%;">
+        <img id="derivacao_neutro" class="conector" src="con_derivacao.png" style="top: 10.2%; left: 91.5%;">
+        
+        <img id="btn_dg" src="al_dg_off.png" style="top: 26%; left: 12%; width: 3.9%;">
+        <img id="btn_dr" src="al_dr_off.png" style="top: 28.6%; left: 23.4%;">
+        <img id="btn_int" src="tec_int_off.png" style="top: 67.8%; left: 63.5%;">
+        
+        <canvas id="canvasCabo" width="1920" height="1080"></canvas>
+        <div id="bolinha1" class="bolinha"></div>
+        <div id="bolinha2" class="bolinha"></div>
+    </div>
 </div>
 
 <script>
+    // Toda sua lógica original preservada
     function habilitarTroca(id, offImg, onImg) {
         const el = document.getElementById(id);
         if(el) el.onclick = () => { el.src = el.src.includes(offImg) ? onImg : offImg; };
