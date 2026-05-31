@@ -83,23 +83,29 @@
 
 function animar(c) {
         let f = 1;
+        console.log("Iniciando animação: " + c.nome);
+        
         let intv = setInterval(() => {
             let img = new Image();
-            img.src = `${c.nome}/quadro${f.toString().padStart(4, '0')}.png`;
+            let caminho = `${c.nome}/quadro${f.toString().padStart(4, '0')}.png`;
+            img.src = caminho;
             
             img.onload = () => { 
-                // A MÁGICA ESTÁ AQUI: 
-                // NÃO damos clearRect. Assim, o frame novo é desenhado 
-                // sobre os pixels do frame anterior que já estão no canvas.
+                console.log("Carregado: " + caminho);
                 ctx.drawImage(img, 0, 0, 1400, 850); 
+            };
+            
+            img.onerror = () => {
+                console.error("Erro ao carregar imagem: " + caminho);
             };
             
             if (++f > c.total) { 
                 clearInterval(intv);
                 indice++; 
+                console.log("Animação concluída. Próximo cabo.");
                 rodarCiclo(); 
             }
-        }, 30);
+        }, 50);
     }
 
     rodarCiclo();
