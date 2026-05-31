@@ -22,6 +22,13 @@
     </div>
 
 <script>
+    // --- EDITE AQUI AS PROPRIEDADES DOS CONECTORES ---
+    const CONFIG_CONECTORES = {
+        FASE_2:   { tamanho: 50, offsetX: -25, offsetY: -25 },
+        NEUTRO_2: { tamanho: 50, offsetX: -25, offsetY: -25 }
+    };
+    // --------------------------------------------------
+
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
     const status = document.getElementById('status');
@@ -41,12 +48,20 @@
     fundo.src = 'ambiente.jpg';
     fundo.onload = () => { ctx.drawImage(fundo, 0, 0, 1920, 1080); rodarCiclo(); };
 
-    // Função de desenho direto
-    function desenharConector(x, y, tamanho, offsetX, offsetY) {
+    function desenharConector(c) {
+        const props = CONFIG_CONECTORES[c.nome];
+        if (!props) return;
+
         const conector = new Image();
         conector.src = 'con_derivacao.png';
         conector.onload = () => {
-            ctx.drawImage(conector, x + offsetX, y + offsetY, tamanho, tamanho);
+            ctx.drawImage(
+                conector, 
+                c.p1.x + props.offsetX, 
+                c.p1.y + props.offsetY, 
+                props.tamanho, 
+                props.tamanho
+            );
         };
     }
 
@@ -60,17 +75,7 @@
 
         b1.onclick = () => {
             b1.style.backgroundColor = "green";
-            
-            // AJUSTE AQUI OS VALORES PARA FASE_2
-            if (c.nome === "FASE_2") {
-                desenharConector(c.p1.x, c.p1.y, 50, -25, -25); // (x, y, TAMANHO, DESLOC_X, DESLOC_Y)
-            }
-            
-            // AJUSTE AQUI OS VALORES PARA NEUTRO_2
-            if (c.nome === "NEUTRO_2") {
-                desenharConector(c.p1.x, c.p1.y, 50, -25, -25); // (x, y, TAMANHO, DESLOC_X, DESLOC_Y)
-            }
-            
+            desenharConector(c); 
             b2.style.left = c.p2.x + "px"; b2.style.top = c.p2.y + "px"; b2.style.backgroundColor = c.cor;
             b2.style.display = "block";
         };
