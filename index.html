@@ -27,14 +27,12 @@
     const status = document.getElementById('status');
     const b1 = document.getElementById('b1'), b2 = document.getElementById('b2');
 
-    // CONFIGURAÇÃO INDIVIDUAL DOS CONECTORES
-    // Adicionei os campos 'conX' e 'conY' para ajuste fino de cada cabo que usa conector
     const config = [
         { nome: "FASE_REDE", total: 64, cor: "red", p1: {x: 200, y: 200}, p2: {x: 1000, y: 500} },
         { nome: "NEUTRO_REDE", total: 76, cor: "blue", p1: {x: 250, y: 250}, p2: {x: 1050, y: 550} },
-        { nome: "FASE_2", total: 25, cor: "red", p1: {x: 300, y: 300}, p2: {x: 1100, y: 600}, conX: -25, conY: -25, size: 50 },
+        { nome: "FASE_2", total: 25, cor: "red", p1: {x: 300, y: 300}, p2: {x: 1100, y: 600} },
         { nome: "RETORNO", total: 45, cor: "yellow", p1: {x: 350, y: 350}, p2: {x: 1150, y: 650} },
-        { nome: "NEUTRO_2", total: 15, cor: "blue", p1: {x: 400, y: 400}, p2: {x: 1200, y: 700}, conX: -10, conY: -30, size: 60 }
+        { nome: "NEUTRO_2", total: 15, cor: "blue", p1: {x: 400, y: 400}, p2: {x: 1200, y: 700} }
     ];
 
     let i = 0;
@@ -43,11 +41,12 @@
     fundo.src = 'ambiente.jpg';
     fundo.onload = () => { ctx.drawImage(fundo, 0, 0, 1920, 1080); rodarCiclo(); };
 
-    function desenharConector(x, y, cfg) {
+    // Função de desenho direto
+    function desenharConector(x, y, tamanho, offsetX, offsetY) {
         const conector = new Image();
         conector.src = 'con_derivacao.png';
         conector.onload = () => {
-            ctx.drawImage(conector, x + cfg.conX, y + cfg.conY, cfg.size, cfg.size);
+            ctx.drawImage(conector, x + offsetX, y + offsetY, tamanho, tamanho);
         };
     }
 
@@ -62,9 +61,14 @@
         b1.onclick = () => {
             b1.style.backgroundColor = "green";
             
-            // Verifica se este cabo possui configuração de conector e desenha
-            if (c.conX !== undefined) {
-                desenharConector(c.p1.x, c.p1.y, c);
+            // AJUSTE AQUI OS VALORES PARA FASE_2
+            if (c.nome === "FASE_2") {
+                desenharConector(c.p1.x, c.p1.y, 50, -25, -25); // (x, y, TAMANHO, DESLOC_X, DESLOC_Y)
+            }
+            
+            // AJUSTE AQUI OS VALORES PARA NEUTRO_2
+            if (c.nome === "NEUTRO_2") {
+                desenharConector(c.p1.x, c.p1.y, 50, -25, -25); // (x, y, TAMANHO, DESLOC_X, DESLOC_Y)
             }
             
             b2.style.left = c.p2.x + "px"; b2.style.top = c.p2.y + "px"; b2.style.backgroundColor = c.cor;
