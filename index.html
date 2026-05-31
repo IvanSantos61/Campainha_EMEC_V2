@@ -3,96 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <style>
-        body { margin: 0; background: #111; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
-
-        /* Contêiner responsivo que mantém a proporção e centraliza o conteúdo */
-        #app-container {
-            width: 100vw;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
+        body { 
+            margin: 0; background: #000; 
+            display: flex; justify-content: center; align-items: center; 
+            min-height: 100vh; overflow: hidden; 
         }
 
-        /* Wrapper escalável: tudo aqui dentro redimensiona junto */
+        /* Contêiner pai que força a escala e centraliza */
         #game-wrapper {
             width: 1920px;
             height: 1080px;
             transform-origin: center;
-            transform: scale(calc(min(100vw / 1920, 100vh / 1080)));
-            background: url('ambiente.jpg') no-repeat center;
-            background-size: contain;
+            transform: scale(calc(min(90vw / 1920, 80vh / 1080)));
             position: relative;
+            /* Flexbox para empilhar o conteúdo conforme a imagem */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        #titulo, #status-bar { position: absolute; left: 0; width: 100%; text-align: center; color: white; font-family: sans-serif; }
-        #titulo { top: 20px; font-size: 60px; }
-        #status-bar { top: 100px; font-size: 30px; background: rgba(0,0,0,0.5); padding: 10px; }
+        /* Posicionamento baseado na sua imagem */
+        #titulo-header { 
+            margin-top: 50px; 
+            margin-bottom: 30px;
+            color: #00ffff; 
+            font-size: 60px; 
+            text-transform: uppercase;
+        }
 
-        .bolinha { 
-            position: absolute; width: 40px; height: 40px; border-radius: 50%; 
-            border: 4px solid white; cursor: pointer; z-index: 10;
+        #status-bar { 
+            width: 1400px; /* Largura proporcional à caixa na imagem */
+            padding: 30px; 
+            margin-bottom: 40px;
+            color: #ffcc00; 
+            text-align: center; 
+            font-size: 35px; 
+            border: 2px solid #333; 
+            background: rgba(0,0,0,0.6);
+            border-radius: 10px;
+        }
+
+        #game-container { 
+            width: 1400px; 
+            height: 700px; 
+            background: #2c7a7a; /* Cor de fundo da área do jogo */
+            border-radius: 15px;
+            position: relative;
         }
     </style>
 </head>
 <body>
 
-<div id="app-container">
     <div id="game-wrapper">
-        <h1 id="titulo">LABORATÓRIO SMT PRO</h1>
-        <div id="status-bar">Iniciando...</div>
+        <h1 id="titulo-header">LABORATÓRIO SMT PRO</h1>
         
-        <div id="bolinha1" class="bolinha" style="display: none;"></div>
-        <div id="bolinha2" class="bolinha" style="display: none;"></div>
+        <div id="status-bar">CONECTE A FASE: CLIQUE NA REFERÊNCIA DO DR</div>
+
+        <div id="game-container">
+            </div>
     </div>
-</div>
-
-<script>
-    const sequencia = ["FASE_REDE", "NEUTRO_REDE", "FASE_2", "RETORNO", "NEUTRO_2"];
-    let indice = 0;
-    
-    // Configuração de coordenadas para cada cabo
-    const cabosConfig = {
-        "FASE_REDE": { b1: {x: 500, y: 400}, b2: {x: 1800, y: 200}, cor: "red" },
-        // Adicione as outras coordenadas aqui...
-    };
-
-    const b1 = document.getElementById('bolinha1');
-    const b2 = document.getElementById('bolinha2');
-    const status = document.getElementById('status-bar');
-
-    function iniciarCabo() {
-        const nomeCabo = sequencia[indice];
-        if (!nomeCabo) { status.innerText = "Laboratório Concluído!"; return; }
-        
-        status.innerText = `Cabo: ${nomeCabo} - Clique na bolinha inicial.`;
-        const cfg = cabosConfig[nomeCabo];
-
-        b1.style.display = "block";
-        b1.style.backgroundColor = cfg.cor;
-        b1.style.left = cfg.b1.x + "px";
-        b1.style.top = cfg.b1.y + "px";
-        b2.style.display = "none";
-
-        b1.onclick = () => {
-            b1.style.backgroundColor = "green";
-            b2.style.display = "block";
-            b2.style.backgroundColor = cfg.cor;
-            b2.style.left = cfg.b2.x + "px";
-            b2.style.top = cfg.b2.y + "px";
-            status.innerText = `Cabo: ${nomeCabo} - Agora clique na bolinha final.`;
-        };
-
-        b2.onclick = () => {
-            status.innerText = `Cabo ${nomeCabo} finalizado!`;
-            indice++;
-            iniciarCabo();
-        };
-    }
-
-    iniciarCabo();
-</script>
 
 </body>
 </html>
