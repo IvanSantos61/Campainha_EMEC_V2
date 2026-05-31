@@ -4,30 +4,16 @@
     <meta charset="UTF-8">
     <style>
         body { margin: 0; background: #0b0e14; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        
-        #main-container {
-            width: 1400px; height: 800px;
-            background: #141a24;
-            border: 2px solid #2d3748;
-            border-radius: 20px;
-            display: flex; flex-direction: column; align-items: center;
-        }
-
-        #titulo { color: #00ffff; font-size: 40px; margin: 15px 0; text-transform: uppercase; }
-        #status-bar { width: 90%; padding: 10px; color: #ffcc00; text-align: center; font-size: 20px; border: 2px solid #333; background: #000; margin-bottom: 15px; }
-        
-        /* O Canvas agora é o palco absoluto de 1920x1080 */
+        #main-container { width: 1400px; height: 800px; background: #141a24; border: 2px solid #2d3748; border-radius: 20px; display: flex; flex-direction: column; align-items: center; }
         #canvas-wrapper { width: 1330px; height: 750px; position: relative; }
         canvas { width: 100%; height: 100%; display: block; }
-        
         .bolinha { width: 30px; height: 30px; border-radius: 50%; border: 3px solid white; position: absolute; cursor: pointer; display: none; z-index: 10; }
     </style>
 </head>
 <body>
-
     <div id="main-container">
-        <h1 id="titulo">LABORATÓRIO SMT PRO</h1>
-        <div id="status-bar">CARREGANDO...</div>
+        <h1 style="color: #00ffff; font-size: 40px; margin: 15px 0;">LABORATÓRIO SMT PRO</h1>
+        <div id="status" style="width: 90%; padding: 10px; color: #ffcc00; text-align: center; font-size: 20px; border: 2px solid #333; background: #000; margin-bottom: 15px;">CARREGANDO...</div>
         <div id="canvas-wrapper">
             <canvas id="canvas" width="1920" height="1080"></canvas>
             <div id="b1" class="bolinha"></div>
@@ -38,36 +24,41 @@
 <script>
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
-    
-    // Desenha o fundo uma única vez
-    const fundo = new Image();
-    fundo.src = 'ambiente.jpg';
-    fundo.onload = () => { ctx.drawImage(fundo, 0, 0, 1920, 1080); };
+    const status = document.getElementById('status');
+    const b1 = document.getElementById('b1'), b2 = document.getElementById('b2');
 
-    // Configuração dos cabos
+    // Configuração com os 5 cabos
     const config = [
-        { nome: "FASE_REDE", total: 64, cor: "red", p1: {x: 400, y: 400}, p2: {x: 1200, y: 600} }
+        { nome: "FASE_REDE", total: 64, cor: "red", p1: {x: 200, y: 200}, p2: {x: 1000, y: 500} },
+        { nome: "NEUTRO_REDE", total: 76, cor: "blue", p1: {x: 250, y: 250}, p2: {x: 1050, y: 550} },
+        { nome: "FASE_2", total: 25, cor: "red", p1: {x: 300, y: 300}, p2: {x: 1100, y: 600} },
+        { nome: "RETORNO", total: 45, cor: "yellow", p1: {x: 350, y: 350}, p2: {x: 1150, y: 650} },
+        { nome: "NEUTRO_2", total: 15, cor: "blue", p1: {x: 400, y: 400}, p2: {x: 1200, y: 700} }
     ];
 
     let i = 0;
-    const b1 = document.getElementById('b1'), b2 = document.getElementById('b2');
-    const status = document.getElementById('status-bar');
+
+    const fundo = new Image();
+    fundo.src = 'ambiente.jpg';
+    fundo.onload = () => { ctx.drawImage(fundo, 0, 0, 1920, 1080); rodarCiclo(); };
 
     function rodarCiclo() {
-        if (i >= config.length) return;
+        if (i >= config.length) { status.innerText = "LABORATÓRIO CONCLUÍDO!"; return; }
         let c = config[i];
         status.innerText = "CONECTE: " + c.nome.replace('_', ' ');
         
-        // Ajustamos as coordenadas baseadas na escala de 1920x1080
-        b1.style.left = (c.p1.x * 0.69) + "px"; b1.style.top = (c.p1.y * 0.69) + "px"; 
-        b1.style.display = "block";
+        b1.style.left = c.p1.x + "px"; b1.style.top = c.p1.y + "px"; b1.style.backgroundColor = c.cor;
+        b1.style.display = "block"; b2.style.display = "none";
+
         b1.onclick = () => {
-            b2.style.left = (c.p2.x * 0.69) + "px"; b2.style.top = (c.p2.y * 0.69) + "px";
+            b1.style.backgroundColor = "green";
+            b2.style.left = c.p2.x + "px"; b2.style.top = c.p2.y + "px"; b2.style.backgroundColor = c.cor;
             b2.style.display = "block";
         };
-        b2.onclick = () => { 
+
+        b2.onclick = () => {
             b1.style.display = "none"; b2.style.display = "none";
-            animar(c); 
+            animar(c);
         };
     }
 
@@ -77,11 +68,13 @@
             let img = new Image();
             img.src = `${c.nome}/quadro${f.toString().padStart(4, '0')}.png`;
             img.onload = () => { ctx.drawImage(img, 0, 0, 1920, 1080); };
-            if (++f > c.total) { clearInterval(intv); i++; rodarCiclo(); }
+            if (++f > c.total) { 
+                clearInterval(intv); 
+                i++; 
+                rodarCiclo(); 
+            }
         }, 50);
     }
-
-    rodarCiclo();
 </script>
 </body>
 </html>
