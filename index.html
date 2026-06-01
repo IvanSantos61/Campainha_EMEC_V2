@@ -49,7 +49,6 @@
         .retorno { background-color: #ffff00; box-shadow: 0 0 15px #ffff00; }
         .sucesso { background-color: #00ff00 !important; box-shadow: 0 0 20px #00ff00 !important; }
 
-        /* Placa com Scanner de 2 ciclos */
         #placa-concluido {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             background: #001100; border: 3px solid #00ff00; padding: 40px 100px;
@@ -181,26 +180,29 @@
             const dgOn = document.getElementById('comp-dg').getAttribute('data-state') === 'on';
             const drOn = document.getElementById('comp-dr').getAttribute('data-state') === 'on';
             
-            if (etapaAtual >= roteiro.length && dgOn && drOn) { 
-                tocarSom('audio-campainha');
-                const placa = document.getElementById('placa-concluido');
-                placa.classList.remove('oculto');
-                
-                // Monitora o fim da animação para remover a placa
-                placa.addEventListener('animationend', function handler() {
-                    placa.classList.add('oculto');
-                    placa.removeEventListener('animationend', handler);
-                });
-            }
-            
+            // Retorno do botão após 200ms
             setTimeout(() => { 
                 el.src = off; 
                 el.setAttribute('data-state', 'off');
                 atualizarQuadroPosicao();
+
+                // Lógica da Placa: Após o retorno (pulsador off), espera 2 segundos para exibir
+                if (etapaAtual >= roteiro.length && dgOn && drOn) { 
+                    setTimeout(() => {
+                        tocarSom('audio-campainha');
+                        const placa = document.getElementById('placa-concluido');
+                        placa.classList.remove('oculto');
+                        
+                        placa.addEventListener('animationend', function handler() {
+                            placa.classList.add('oculto');
+                            placa.removeEventListener('animationend', handler);
+                        });
+                    }, 2000);
+                }
             }, 200);
         }
 
-        // --- Funções de suporte ---
+        // --- Funções de suporte inalteradas ---
         function abrirAnimacaoConector() {
             const img = document.getElementById('img-tecnica-exibida');
             const legenda = document.getElementById('instrucao-clique');
