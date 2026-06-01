@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laboratório SMT Pro - Final</title>
+    <title>Laboratório SMT Pro - Simulação Animada</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
         
@@ -85,12 +85,13 @@
         }
         .ponto:hover { transform: translate(-50%, -50%) scale(1.3); }
 
+        /* Cores das Bolinhas */
         .fase { background-color: #ff0000; box-shadow: 0 0 15px #ff0000; }
         .neutro { background-color: #0066ff; box-shadow: 0 0 15px #0066ff; }
-        .retorno { background-color: #ffffff; box-shadow: 0 0 10px #ffffff; }
+        .retorno { background-color: #ffff00; box-shadow: 0 0 15px #ffff00; } /* Ajustado para Amarelo */
         .sucesso { background-color: #00ff00 !important; box-shadow: 0 0 20px #00ff00 !important; }
 
-        /* BOTÃO REINICIAR (AGORA DENTRO DO QUADRO) */
+        /* BOTÃO REINICIAR (DENTRO DO QUADRO) */
         #btn-reiniciar {
             position: absolute;
             bottom: 3%;
@@ -103,7 +104,7 @@
             font-weight: bold;
             border-radius: 5px;
             cursor: pointer;
-            z-index: 200; /* Garante que fique acima de tudo */
+            z-index: 200;
             text-transform: uppercase;
             transition: filter 0.2s, transform 0.1s;
         }
@@ -116,7 +117,7 @@
     <h1 id="titulo-projeto">LABORATÓRIO SMT PRO</h1>
 
     <div id="linha-status">
-        <span id="label-status" class="texto-status">INICIANDO...</span>
+        <span id="label-status" class="texto-status">SISTEMA PRONTO</span>
     </div>
 
     <main id="quadro-simulacao">
@@ -161,62 +162,65 @@
         const labelStatus = document.getElementById('label-status');
         const containerInteracao = document.getElementById('interacao-container');
 
-        function atualizarPasso() {
+        function proximoPasso() {
             if (etapaAtual >= roteiro.length) {
-                labelStatus.innerText = "CIRCUITO CONCLUÍDO!";
+                labelStatus.innerText = "INSTALAÇÃO FINALIZADA COM SUCESSO!";
                 return;
             }
 
             const dados = roteiro[etapaAtual];
             labelStatus.innerText = `CONECTE: ${dados.nome.toUpperCase()}`;
 
+            // Cria bolinha de origem
             criarPonto(dados.origem, dados.cor, function() {
                 this.classList.add('sucesso');
+                // Cria bolinha de destino
                 criarPonto(dados.destino, dados.cor, function() {
                     containerInteracao.innerHTML = "";
-                    iniciarAnimacao(dados);
+                    processarAnimacao(dados);
                 });
             });
         }
 
-        function criarPonto(pos, corClasse, acao) {
+        function criarPonto(pos, corClasse, cliqueFn) {
             const ponto = document.createElement('div');
             ponto.className = `ponto ${corClasse}`;
             ponto.style.left = pos.x + "%";
             ponto.style.top = pos.y + "%";
             ponto.onclick = (e) => {
                 e.stopPropagation();
-                acao.call(ponto);
+                cliqueFn.call(ponto);
             };
             containerInteracao.appendChild(ponto);
         }
 
-        function iniciarAnimacao(dados) {
+        // Função que garante o deslocamento suave do cabo pela tela
+        function processarAnimacao(dados) {
             const img = document.getElementById(dados.imgId);
             img.classList.remove('oculto');
             let frame = 1;
 
-            function loop() {
+            function desenhar() {
                 if (frame <= dados.total) {
-                    const num = String(frame).padStart(4, '0');
-                    img.src = `${dados.pasta}/quadro${num}.png`;
+                    const numero = String(frame).padStart(4, '0');
+                    img.src = `${dados.pasta}/quadro${numero}.png`;
                     frame++;
-                    requestAnimationFrame(loop);
+                    // O requestAnimationFrame sincroniza com a taxa de atualização da tela
+                    requestAnimationFrame(desenhar);
                 } else {
                     etapaAtual++;
-                    setTimeout(atualizarPasso, 300);
+                    setTimeout(proximoPasso, 400);
                 }
             }
-            requestAnimationFrame(loop);
+            requestAnimationFrame(desenhar);
         }
 
-        // FUNÇÃO DO BOTÃO REINICIAR
-        document.getElementById('btn-reiniciar').addEventListener('click', () => {
+        // Função do botão reiniciar
+        document.getElementById('btn-reiniciar').onclick = () => {
             window.location.reload();
-        });
+        };
 
-        // INICIALIZAÇÃO
-        window.onload = atualizarPasso;
+        window.onload = proximoPasso;
     </script>
 </body>
 </html>
