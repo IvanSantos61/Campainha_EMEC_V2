@@ -1,233 +1,224 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-pt">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SMT Pro - Escala Longitudinal Protegida</title>
+    <title>SMT Pro - Simulador de Cablagem</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
         
         body {
-            background-color: #05070a;
-            height: 100vh;
-            width: 100vw;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            font-family: 'Segoe UI', sans-serif;
-        }
-
-        /* O CONTAINER MESTRE AGORA TEM DIMENSÕES ABSOLUTAS */
-        #app-container {
-            width: 1920px;
-            height: 1080px;
-            min-width: 1920px;
-            min-height: 1080px;
-            position: relative;
-            transform-origin: center center;
+            background-color: #06080a;
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
             flex-direction: column;
-            background-color: #000;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
         }
 
-        /* 1. TÍTULO - Altura Fixa */
-        #zona-titulo {
-            height: 110px; /* Fixado */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-shrink: 0;
-        }
-        .titulo-cyan {
-            color: #00f2ff;
-            font-size: 52px;
+        /* 1. TÍTULO - Fora do quadro */
+        #titulo-projeto {
+            color: #00FFFF;
+            font-size: clamp(24px, 5vw, 48px);
             font-weight: 900;
-            text-shadow: 0 0 20px rgba(0, 242, 255, 0.6);
-        }
-
-        /* 2. LINHA DE STATUS - Altura Fixa */
-        #zona-status {
-            height: 90px; /* Fixado */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-shrink: 0;
-        }
-        .caixa-status {
-            background: rgba(15, 20, 25, 0.95);
-            border: 1px solid #1a3a5a;
-            padding: 12px 60px;
-            border-radius: 8px;
-            min-width: 900px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            text-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
             text-align: center;
         }
-        .texto-gold {
-            color: #ffcc00;
-            font-size: 26px;
+
+        /* 2. LINHA DE STATUS - Fora do quadro */
+        #linha-status {
+            background: rgba(15, 25, 35, 0.9);
+            border: 1px solid #1a3a5a;
+            padding: 15px 30px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 1200px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
+        .texto-status {
+            color: #FFD700;
+            font-size: clamp(16px, 2.5vw, 24px);
             font-weight: bold;
+            text-transform: uppercase;
         }
 
-        /* 3. QUADRO PRINCIPAL - Altura Restante (1080 - 110 - 90 = 880px) */
-        #quadro-principal {
-            width: 1840px; /* 1920 menos as margens de 40px cada lado */
-            height: 840px; /* Altura calculada para sobrar espaço no rodapé se necessário */
-            margin: 0 auto;
+        /* 3. QUADRO PRINCIPAL DE EQUIPAMENTOS */
+        #quadro-simulacao {
             position: relative;
-            border: 2px solid #222;
-            background-color: #0a0a0a;
+            width: 100%;
+            max-width: 1600px; /* Limite de conforto visual */
+            aspect-ratio: 1920 / 1080; /* TRAVA A PROPORÇÃO SEM TRAVAR O ZOOM */
+            background-color: #000;
+            border: 2px solid #333;
             overflow: hidden;
-            flex-shrink: 0;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
         }
 
-        /* GARANTE QUE O FUNDO E CABOS PREENCHAM O QUADRO SEM DISTORÇÃO */
-        .camada-grafica {
+        .camada {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            object-fit: fill; /* Força o preenchimento total do quadro de 840px */
+            object-fit: contain;
             pointer-events: none;
         }
 
-        .cabo-oculto { display: none; }
+        .oculto { display: none; }
 
-        /* PONTOS DE CONEXÃO */
-        .ponto-conexao {
+        /* INTERAÇÃO: BOLINHAS DINÂMICAS */
+        .ponto {
             position: absolute;
-            width: 28px;
-            height: 28px;
+            width: 1.8%; /* Tamanho relativo ao quadro */
+            aspect-ratio: 1 / 1;
             border-radius: 50%;
+            border: 2px solid #fff;
             cursor: pointer;
             z-index: 100;
-            border: 3px solid #fff;
             transform: translate(-50%, -50%);
-            transition: 0.2s;
+            transition: transform 0.2s;
         }
-        .ponto-fase { background-color: #ff0000; box-shadow: 0 0 15px #ff0000; }
-        .ponto-neutro { background-color: #0066ff; box-shadow: 0 0 15px #0066ff; }
-        .ponto-retorno { background-color: #ffffff; box-shadow: 0 0 15px #000; }
-        .ponto-sucesso { background-color: #00ff00 !important; box-shadow: 0 0 20px #00ff00 !important; }
+        .ponto:hover { transform: translate(-50%, -50%) scale(1.2); }
 
-        #btn-reiniciar {
-            position: absolute;
-            bottom: 20px;
-            right: 40px;
-            background: linear-gradient(180deg, #cc0000, #880000);
+        /* Cores iniciais por tipo de cabo */
+        .fase { background-color: #ff0000; box-shadow: 0 0 15px #ff0000; }
+        .neutro { background-color: #0066ff; box-shadow: 0 0 15px #0066ff; }
+        .retorno { background-color: #ffffff; box-shadow: 0 0 10px #ffffff; }
+        
+        /* Estado de sucesso (Verde) */
+        .sucesso { background-color: #00ff00 !important; box-shadow: 0 0 20px #00ff00 !important; }
+
+        /* Botão Reiniciar */
+        #btn-reset {
+            margin-top: 30px;
+            background: linear-gradient(180deg, #d10000, #8b0000);
             color: white;
             border: none;
             padding: 12px 40px;
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
-            border-radius: 5px;
+            border-radius: 30px;
             cursor: pointer;
+            transition: filter 0.2s;
         }
+        #btn-reset:hover { filter: brightness(1.2); }
     </style>
 </head>
 <body>
 
-    <div id="app-container">
-        <header id="zona-titulo">
-            <h1 class="titulo-cyan">LABORATÓRIO SMT PRO</h1>
-        </header>
+    <h1 id="titulo-projeto">LABORATÓRIO SMT PRO</h1>
 
-        <section id="zona-status">
-            <div class="caixa-status">
-                <p class="texto-gold" id="texto-instrucao">AGUARDANDO CONEXÃO...</p>
-            </div>
-        </section>
-
-        <main id="quadro-principal">
-            <img src="ambiente.jpg" class="camada-grafica">
-            <img id="camada-fase-rede" class="camada-grafica cabo-oculto">
-            <img id="camada-neutro-rede" class="camada-grafica cabo-oculto">
-            <img id="camada-fase-2" class="camada-grafica cabo-oculto">
-            <img id="camada-retorno" class="camada-grafica cabo-oculto">
-            <img id="camada-neutro-2" class="camada-grafica cabo-oculto">
-            <div id="container-pontos"></div>
-        </main>
-
-        <button id="btn-reiniciar">REINICIAR</button>
+    <div id="linha-status">
+        <span id="label-status" class="texto-status">A CARREGAR SISTEMA...</span>
     </div>
 
+    <main id="quadro-simulacao">
+        <img src="ambiente.jpg" class="camada" alt="Quadro">
+
+        <img id="img-fase-rede" class="camada oculto">
+        <img id="img-neutro-rede" class="camada oculto">
+        <img id="img-fase-circuito" class="camada oculto">
+        <img id="img-retorno" class="camada oculto">
+        <img id="img-neutro-circuito" class="camada oculto">
+
+        <div id="interacao-container"></div>
+    </main>
+
+    <button id="btn-reset" onclick="location.reload()">REINICIAR LABORATÓRIO</button>
+
     <script>
-        const container = document.getElementById('app-container');
-
-        // FUNÇÃO DE ESCALA QUE PRESERVA O ASPECT RATIO (16:9)
-        function ajustarEscala() {
-            const larguraJanela = window.innerWidth;
-            const alturaJanela = window.innerHeight;
-
-            // Calcula a escala baseada na dimensão que "apertar" primeiro
-            const escala = Math.min(larguraJanela / 1920, alturaJanela / 1080);
-            
-            container.style.transform = `scale(${escala})`;
-        }
-
-        window.addEventListener('resize', ajustarEscala);
-        window.addEventListener('load', ajustarEscala);
-
-        // --- LÓGICA DE INSTALAÇÃO DOS 5 CABOS ---
+        /**
+         * CONFIGURAÇÃO DOS 5 CABOS
+         * Coordenadas em % para manter a precisão em qualquer tamanho de ecrã.
+         */
         const roteiro = [
-            { nome: "Fase Rede", pasta: "FASE_REDE", total: 64, idImg: "camada-fase-rede", cor: "ponto-fase", origem: { x: 450, y: 350 }, destino: { x: 450, y: 500 } },
-            { nome: "Neutro Rede", pasta: "NEUTRO_REDE", total: 76, idImg: "camada-neutro-rede", cor: "ponto-neutro", origem: { x: 510, y: 350 }, destino: { x: 510, y: 500 } },
-            { nome: "Fase Circuito 2", pasta: "FASE_2", total: 25, idImg: "camada-fase-2", cor: "ponto-fase", origem: { x: 600, y: 550 }, destino: { x: 1100, y: 700 } },
-            { nome: "Retorno Lâmpada", pasta: "RETORNO", total: 45, idImg: "camada-retorno", cor: "ponto-retorno", origem: { x: 1120, y: 700 }, destino: { x: 1350, y: 640 } },
-            { nome: "Neutro Lâmpada", pasta: "NEUTRO_2", total: 15, idImg: "camada-neutro-2", cor: "ponto-neutro", origem: { x: 1380, y: 640 }, destino: { x: 550, y: 550 } }
+            { 
+                id: "fase_rede", nome: "Fase de Entrada", pasta: "FASE_REDE", total: 64, imgId: "img-fase-rede", cor: "fase",
+                origem: { x: 28.5, y: 39.2 }, destino: { x: 28.5, y: 52.5 }
+            },
+            { 
+                id: "neutro_rede", nome: "Neutro de Entrada", pasta: "NEUTRO_REDE", total: 76, imgId: "img-neutro-rede", cor: "neutro",
+                origem: { x: 31.2, y: 39.2 }, destino: { x: 31.2, y: 52.5 }
+            },
+            { 
+                id: "fase_2", nome: "Fase do Circuito", pasta: "FASE_2", total: 25, imgId: "img-fase-circuito", cor: "fase",
+                origem: { x: 35.0, y: 58.0 }, destino: { x: 60.5, y: 71.0 }
+            },
+            { 
+                id: "retorno", nome: "Retorno da Lâmpada", pasta: "RETORNO", total: 45, imgId: "img-retorno", cor: "retorno",
+                origem: { x: 62.0, y: 71.0 }, destino: { x: 74.5, y: 64.5 }
+            },
+            { 
+                id: "neutro_2", nome: "Neutro da Lâmpada", pasta: "NEUTRO_2", total: 15, imgId: "img-neutro-circuito", cor: "neutro",
+                origem: { x: 76.5, y: 64.5 }, destino: { x: 32.5, y: 58.0 }
+            }
         ];
 
         let etapaAtual = 0;
-        const textoInstrucao = document.getElementById('texto-instrucao');
-        const containerPontos = document.getElementById('container-pontos');
+        const labelStatus = document.getElementById('label-status');
+        const containerInteracao = document.getElementById('interacao-container');
 
-        function proximoPasso() {
+        function atualizarLaboratorio() {
             if (etapaAtual >= roteiro.length) {
-                textoInstrucao.innerText = "CIRCUITO MONTADO COM SUCESSO!";
+                labelStatus.innerText = "CIRCUITO MONTADO E TESTADO COM SUCESSO!";
                 return;
             }
 
             const dados = roteiro[etapaAtual];
-            textoInstrucao.innerText = `INSTALE O CABO: ${dados.nome.toUpperCase()}`;
+            labelStatus.innerText = `LIGUE O CABO: ${dados.nome.toUpperCase()}`;
 
-            criarBolinha(dados.origem.x, dados.origem.y, dados.cor, function() {
-                this.classList.add('ponto-sucesso');
-                criarBolinha(dados.destino.x, dados.destino.y, dados.cor, function() {
-                    containerPontos.innerHTML = "";
-                    rodarAnimacao(dados);
+            // 1. Cria bolinha de ORIGEM na cor do cabo
+            criarCheckpoint(dados.origem, dados.cor, function() {
+                this.classList.add('sucesso'); // Fica verde
+                
+                // 2. Cria bolinha de DESTINO na cor do cabo
+                criarCheckpoint(dados.destino, dados.cor, function() {
+                    containerInteracao.innerHTML = ""; // Limpa pontos
+                    dispararAnimacao(dados);
                 });
             });
         }
 
-        function criarBolinha(x, y, cor, clique) {
-            const b = document.createElement('div');
-            b.className = `ponto-conexao ${cor}`;
-            b.style.left = x + "px";
-            b.style.top = y + "px";
-            b.onclick = clique;
-            containerPontos.appendChild(b);
+        function criarCheckpoint(pos, corClasse, aoClicar) {
+            const ponto = document.createElement('div');
+            ponto.className = `ponto ${corClasse}`;
+            ponto.style.left = pos.x + "%";
+            ponto.style.top = pos.y + "%";
+            ponto.onclick = (e) => {
+                e.stopPropagation();
+                aoClicar.call(ponto);
+            };
+            containerInteracao.appendChild(ponto);
         }
 
-        function rodarAnimacao(dados) {
-            const img = document.getElementById(dados.idImg);
-            img.classList.remove('cabo-oculto');
+        function dispararAnimacao(dados) {
+            const imgElement = document.getElementById(dados.imgId);
+            imgElement.classList.remove('oculto');
             let frame = 1;
-            function frameLoop() {
+
+            function animar() {
                 if (frame <= dados.total) {
-                    const n = String(frame).padStart(4, '0');
-                    img.src = `${dados.pasta}/quadro${n}.png`;
+                    const sufixo = String(frame).padStart(4, '0');
+                    imgElement.src = `${dados.pasta}/quadro${sufixo}.png`;
                     frame++;
-                    requestAnimationFrame(frameLoop);
+                    requestAnimationFrame(animar);
                 } else {
                     etapaAtual++;
-                    proximoPasso();
+                    setTimeout(atualizarLaboratorio, 400);
                 }
             }
-            frameLoop();
+            requestAnimationFrame(animar);
         }
 
-        document.getElementById('btn-reiniciar').onclick = () => location.reload();
-        window.onload = () => { ajustarEscala(); proximoPasso(); };
+        // Início
+        window.onload = atualizarLaboratorio;
     </script>
 </body>
 </html>
