@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laboratório SMT Pro - Ultra Smooth</title>
+    <title>Laboratório SMT Pro - Layout Final</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
         
@@ -66,7 +66,6 @@
 
         .oculto { display: none; }
 
-        /* PONTOS DE INTERAÇÃO */
         .ponto {
             position: absolute;
             width: 1.8%;
@@ -85,23 +84,26 @@
         .retorno { background-color: #ffff00; box-shadow: 0 0 15px #ffff00; }
         .sucesso { background-color: #00ff00 !important; box-shadow: 0 0 20px #00ff00 !important; }
 
-        /* BOTÃO REINICIAR */
+        /* BOTÃO REINICIAR - ESTILO PÍLULA NO CANTO ESQUERDO */
         #btn-reiniciar {
             position: absolute;
             bottom: 3%;
-            right: 2%;
+            left: 2%; /* Posicionado à esquerda */
             background: linear-gradient(180deg, #cc0000, #880000);
             color: white;
             border: 1px solid #500;
-            padding: 1% 3%;
-            font-size: 1.2vw;
+            padding: 0.8% 3.5%; /* Padding ajustado para o formato pílula */
+            font-size: 1.1vw;
             font-weight: bold;
-            border-radius: 5px;
+            border-radius: 50px; /* Formato pílula */
             cursor: pointer;
             z-index: 200;
             text-transform: uppercase;
+            transition: filter 0.2s, transform 0.1s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
         }
         #btn-reiniciar:hover { filter: brightness(1.2); }
+        #btn-reiniciar:active { transform: scale(0.95); }
     </style>
 </head>
 <body>
@@ -136,7 +138,7 @@
         ];
 
         let etapaAtual = 0;
-        const cacheImagens = {}; // Onde os quadros ficarão salvos
+        const cacheImagens = {};
 
         function proximoPasso() {
             if (etapaAtual >= roteiro.length) {
@@ -146,7 +148,6 @@
             const dados = roteiro[etapaAtual];
             document.getElementById('label-status').innerText = `CONECTE: ${dados.nome.toUpperCase()}`;
             
-            // Pré-carrega o próximo cabo enquanto o usuário ainda não clicou
             preCarregarCabo(dados);
 
             criarPonto(dados.origem, dados.cor, function() {
@@ -158,7 +159,6 @@
             });
         }
 
-        // FUNÇÃO DE PRÉ-CARREGAMENTO (Buffer)
         function preCarregarCabo(dados) {
             cacheImagens[dados.pasta] = [];
             for (let i = 1; i <= dados.total; i++) {
@@ -184,9 +184,6 @@
             
             let frameIdx = 0;
             const frames = cacheImagens[dados.pasta];
-            
-            // Ajuste aqui para velocidade: maior o número, mais lento. 
-            // 2 ou 3 costuma ser o ideal para ver o cabo "correndo" suavemente.
             const lentidao = 3; 
             let contador = 0;
 
