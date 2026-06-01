@@ -49,7 +49,7 @@
         .retorno { background-color: #ffff00; box-shadow: 0 0 15px #ffff00; }
         .sucesso { background-color: #00ff00 !important; box-shadow: 0 0 20px #00ff00 !important; }
 
-        /* Placa Atualizada */
+        /* Placa com Scanner de 2 ciclos */
         #placa-concluido {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             background: #001100; border: 3px solid #00ff00; padding: 40px 100px;
@@ -61,7 +61,7 @@
             content: ''; position: absolute; top: -100%; left: 0; 
             width: 100%; height: 2px; background: #00ff00;
             box-shadow: 0 0 15px #00ff00;
-            animation: scanner 2s linear infinite;
+            animation: scanner 2s linear 2;
         }
         @keyframes scanner { 0% { top: 0%; } 100% { top: 100%; } }
 
@@ -183,9 +183,14 @@
             
             if (etapaAtual >= roteiro.length && dgOn && drOn) { 
                 tocarSom('audio-campainha');
-                setTimeout(() => {
-                    document.getElementById('placa-concluido').classList.remove('oculto');
-                }, 3000);
+                const placa = document.getElementById('placa-concluido');
+                placa.classList.remove('oculto');
+                
+                // Monitora o fim da animação para remover a placa
+                placa.addEventListener('animationend', function handler() {
+                    placa.classList.add('oculto');
+                    placa.removeEventListener('animationend', handler);
+                });
             }
             
             setTimeout(() => { 
@@ -195,6 +200,7 @@
             }, 200);
         }
 
+        // --- Funções de suporte ---
         function abrirAnimacaoConector() {
             const img = document.getElementById('img-tecnica-exibida');
             const legenda = document.getElementById('instrucao-clique');
