@@ -8,15 +8,26 @@
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
         body { background-color: #05070a; color: white; font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 20px; }
         
+        /* Splash Screen Refinada */
         #splash-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #05070a; z-index: 5000; display: flex; justify-content: center; align-items: center; }
-        .moldura-neon { border: 2.4px solid #00f2ff; padding: 72px; border-radius: 24px; text-align: center; box-shadow: 0 0 48px rgba(0, 242, 255, 0.5), inset 0 0 24px rgba(0, 242, 255, 0.2); }
+        .moldura-neon { 
+            border: 2.4px solid #00f2ff; padding: 72px; border-radius: 24px; text-align: center; 
+            box-shadow: 0 0 48px rgba(0, 242, 255, 0.5), inset 0 0 24px rgba(0, 242, 255, 0.2);
+        }
+        /* Título com opacidade menor (0.4) e cor Cyan */
         .splash-titulo { font-size: 3.6em; color: rgba(0, 242, 255, 0.4); text-transform: uppercase; margin-bottom: 12px; font-weight: normal; }
+        /* Demais textos em Cyan pleno */
         .splash-subtitulo { font-size: 2.64em; color: #00f2ff; text-transform: uppercase; margin-bottom: 24px; font-weight: normal; }
         .splash-info { font-size: 1.8em; color: #00f2ff; margin-bottom: 48px; }
-        .splash-footer { color: #808080; font-size: 1.08em; margin-bottom: 48px; }
-        .btn-iniciar { background: transparent; color: #00f2ff; border: 2.4px solid #00f2ff; padding: 18px 48px; border-radius: 60px; font-size: 1.44em; cursor: pointer; animation: piscar 1.5s infinite; }
+        /* Créditos em cinza-claro *//* Créditos em cinza */
+.splash-footer { color: #808080; font-size: 1.08em; margin-bottom: 48px; }
+        .btn-iniciar { 
+            background: transparent; color: #00f2ff; border: 2.4px solid #00f2ff; padding: 18px 48px; 
+            border-radius: 60px; font-size: 1.44em; cursor: pointer; animation: piscar 1.5s infinite;
+        }
         @keyframes piscar { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
+        /* Estilos mantidos conforme seu envio original */
         #titulo-projeto { color: #00f2ff; font-size: clamp(24px, 5vw, 48px); font-weight: 900; text-transform: uppercase; margin-bottom: 15px; text-shadow: 0 0 15px rgba(0, 242, 255, 0.5); }
         #linha-status { background: rgba(10, 15, 20, 0.9); border: 1px solid #1a3a5a; padding: 15px 30px; border-radius: 8px; margin-bottom: 20px; width: 100%; max-width: 1200px; text-align: center; }
         .texto-status { color: #ffcc00; font-size: clamp(16px, 2.5vw, 24px); font-weight: bold; text-transform: uppercase; }
@@ -36,7 +47,12 @@
         .oculto { display: none !important; }
 
         .balao-info { position: absolute; width: 45px; height: 45px; background: #000; color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: help; z-index: 900; font-size: 24px; }
-        .texto-balao { visibility: hidden; position: absolute; bottom: 50px; left: 0; width: 300px; background: white; color: black; padding: 12px; border-radius: 8px; font-size: 18px; z-index: 999; text-transform: none; font-weight: normal; white-space: normal; line-height: 1.4; border: 2px solid #00f2ff; }
+        .texto-balao { 
+            visibility: hidden; position: absolute; bottom: 50px; left: 0; width: 300px; 
+            background: white; color: black; padding: 12px; border-radius: 8px; 
+            font-size: 18px; z-index: 999; text-transform: none; font-weight: normal; 
+            white-space: normal; line-height: 1.4; border: 2px solid #00f2ff;
+        }
         .balao-info:hover .texto-balao { visibility: visible; }
 
         #painel-dispositivos { position: absolute; top: 25%; left: 59%; width: 15%; background: rgba(5, 15, 30, 0.95); border: 2px solid #00f2ff; border-radius: 8px; z-index: 500; }
@@ -67,6 +83,7 @@
     </style>
 </head>
 <body>
+
     <div id="splash-screen">
         <div class="moldura-neon">
             <h1 class="splash-titulo">LABORATÓRIO SMT PRO</h1>
@@ -145,17 +162,13 @@
                 <div class="item-ajuda" onclick="abrirAnimacaoConector()">4. Instalação do conector de derivação</div>
                 <div class="item-ajuda" onclick="mostrarImagemTecnica('listamatcp.png')">5. Lista de material</div>
                 <button onclick="fecharAjuda()" style="margin-top:20px; padding:20px 30px; cursor:pointer;">Fechar</button>
-
-<button onclick="tocarSom('audio-conexao'); fecharAjuda()" style="margin-top:20px; padding:20px 30px; cursor:pointer;">Fechar</button>
             </div>
         </div>
 
         <div id="visualizador-tecnico" class="oculto">
             <div id="instrucao-clique" class="oculto">CLIQUE NO CONECTOR PARA INSTALAÇÃO</div>
             <img id="img-tecnica-exibida" src="" style="max-width:90%; max-height:80%;">
-<button onclick="voltarParaLista()" style="margin-top:20px; background:#ffcc00; padding:10px 30px; font-weight:bold; cursor:pointer;">VOLTAR</button>
-
-<button onclick="tocarSom('audio-conexao'); voltarParaLista()" style="margin-top:20px; background:#ffcc00; padding:10px 30px; font-weight:bold; cursor:pointer;">VOLTAR</button>
+            <button onclick="voltarParaLista()" style="margin-top:20px; background:#ffcc00; padding:10px 30px; font-weight:bold; cursor:pointer;">VOLTAR</button>
         </div>
     </main>
 
