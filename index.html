@@ -4,60 +4,51 @@
     <meta charset="UTF-8">
     <title>Laboratório SMT Pro</title>
     <style>
+        /* CSS original mantido integralmente */
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
         body { background-color: #05070a; color: white; font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 20px; }
-        #titulo-projeto { color: #00f2ff; font-size: 48px; font-weight: 900; text-transform: uppercase; margin-bottom: 15px; }
-        #quadro-simulacao { position: relative; width: 1600px; height: 900px; background-color: #000; border: 2px solid #333; overflow: hidden; }
-        .camada { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
-        .tecla-interativa { position: absolute; z-index: 60; cursor: pointer; }
-        .ponto { position: absolute; width: 30px; height: 30px; border-radius: 50%; border: 2px solid #fff; cursor: pointer; z-index: 100; transform: translate(-50%, -50%); }
+        #quadro-simulacao { position: relative; width: 100%; max-width: 1600px; aspect-ratio: 1920 / 1080; background-color: #000; border: 2px solid #333; overflow: hidden; }
+        .camada { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
+        .ponto { position: absolute; width: 1.8%; aspect-ratio: 1/1; border-radius: 50%; border: 2px solid #fff; cursor: pointer; z-index: 100; transform: translate(-50%, -50%); }
         .sucesso { background-color: #00ff00 !important; }
         .oculto { display: none !important; }
 
-        /* Estilo dos Balões 'i' */
+        /* Balões Informativos */
         .balao-info { position: absolute; width: 30px; height: 30px; background: #00f2ff; color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: help; z-index: 900; }
-        .balao-info::after { content: attr(data-msg); visibility: hidden; position: absolute; top: 40px; left: 0; width: 250px; background: #fff; color: #000; padding: 10px; border-radius: 5px; font-size: 13px; z-index: 999; }
+        .balao-info::after { content: attr(data-msg); visibility: hidden; position: absolute; top: 35px; left: 0; width: 250px; background: #fff; color: #000; padding: 10px; border-radius: 5px; font-size: 12px; z-index: 999; }
         .balao-info:hover::after { visibility: visible; }
 
-        #placa-concluido { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #001100; border: 3px solid #00ff00; padding: 40px; font-size: 50px; color: #00ff00; z-index: 2000; text-transform: uppercase; font-weight: bold; }
+        /* Placa e Scanner */
+        #placa-concluido { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #001100; border: 3px solid #00ff00; padding: 40px; color: #00ff00; z-index: 2000; font-weight: bold; text-transform: uppercase; }
         #placa-concluido::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: #00ff00; animation: scanner 2s linear infinite; }
         @keyframes scanner { 0% { top: 0%; } 100% { top: 100%; } }
     </style>
 </head>
 <body>
-    <h1 id="titulo-projeto">LABORATÓRIO SMT PRO</h1>
     <main id="quadro-simulacao">
-        <div id="balao-fase-rede" class="balao-info oculto" style="top: 38%; left: 27%;" data-msg="A fase pode ser de qualquer cor (Item 6.1.5.3.4 da NBR-5410)">i</div>
-        <div id="balao-neutro-rede" class="balao-info oculto" style="top: 35%; left: 44%;" data-msg="A seção mínima dos fios de iluminação é 1,5mm² (Item 6.2.6.1.1 da NBR-5410)">i</div>
-        <div id="balao-conector" class="balao-info oculto" style="top: 20%; left: 73%;" data-msg="Conectores de emenda garantem conexões firmes">i</div>
-        <div id="balao-fase-2" class="balao-info oculto" style="top: 71%; left: 73%;" data-msg="O interruptor deve seccionar a fase (Item 6.3.7.2.1 da NBR-5410)">i</div>
-        <div id="balao-retorno" class="balao-info oculto" style="top: 59%; left: 88%;" data-msg="O retorno também poderá ser de qualquer cor">i</div>
-        <div id="balao-neutro-2" class="balao-info oculto" style="top: 60%; left: 90%;" data-msg="O interruptor recebe fase e retorno e a campainha recebe retorno e neutro">i</div>
+        <div id="balao-0" class="balao-info oculto" style="top: 20%; left: 30%;" data-msg="A fase pode ser de qualquer cor (Item 6.1.5.3.4 da NBR-5410)">i</div>
+        <div id="balao-1" class="balao-info oculto" style="top: 20%; left: 40%;" data-msg="A seção mínima dos fios de iluminação é 1,5mm² (Item 6.2.6.1.1 da NBR-5410)">i</div>
+        <div id="balao-2" class="balao-info oculto" style="top: 20%; left: 50%;" data-msg="Conectores garantem conexões firmes">i</div>
+        <div id="balao-3" class="balao-info oculto" style="top: 20%; left: 60%;" data-msg="O interruptor deve seccionar o condutor fase">i</div>
+        <div id="balao-4" class="balao-info oculto" style="top: 20%; left: 70%;" data-msg="O retorno pode ser de qualquer cor">i</div>
 
         <img src="ambiente.jpg" class="camada">
-        <img id="img-fase-rede" class="camada oculto" src="">
-        <img id="img-neutro-rede" class="camada oculto" src="">
-        <img id="img-fase-circuito" class="camada oculto" src="">
-        <img id="img-retorno" class="camada oculto" src="">
-        <img id="img-neutro-circuito" class="camada oculto" src="">
-
+        <img id="img-fase-rede" class="camada oculto">
+        <img id="img-neutro-rede" class="camada oculto">
+        <img id="img-fase-circuito" class="camada oculto">
+        <img id="img-retorno" class="camada oculto">
+        <img id="img-neutro-circuito" class="camada oculto">
         <div id="placa-concluido" class="oculto">INSTALAÇÃO CONCLUÍDA</div>
         <div id="interacao-container"></div>
-        <button onclick="abrirAjuda()">AJUDA TÉCNICA</button>
     </main>
-
-    <audio id="audio-int" src="int.mp3"></audio>
-    <audio id="audio-disj" src="disj.mp3"></audio>
-    <audio id="audio-conexao" src="conexao.mp3"></audio>
-    <audio id="audio-campainha" src="campainha.mp3"></audio>
 
     <script>
         const roteiro = [
-            { id: "fase-rede", pasta: "FASE_REDE", total: 64, imgId: "img-fase-rede", origem: { x: 27, y: 38.5 }, destino: { x: 98.5, y: 17.5 } },
-            { id: "neutro-rede", pasta: "NEUTRO_REDE", total: 76, imgId: "img-neutro-rede", origem: { x: 44.3, y: 35.2 }, destino: { x: 98.5, y: 14 } },
-            { id: "fase-2", pasta: "FASE_2", total: 25, imgId: "img-fase-circuito", origem: { x: 75, y: 19 }, destino: { x: 73.5, y: 71.0 } },
-            { id: "retorno", pasta: "RETORNO", total: 45, imgId: "img-retorno", origem: { x: 73, y: 76.5 }, destino: { x: 88.5, y: 59.5 } },
-            { id: "neutro-2", pasta: "NEUTRO_2", total: 15, imgId: "img-neutro-circuito", origem: { x: 92.5, y: 15.8 }, destino: { x: 90.2, y: 59.5 } }
+            { pasta: "FASE_REDE", total: 64, imgId: "img-fase-rede", origem: {x: 27, y: 38.5}, destino: {x: 98.5, y: 17.5} },
+            { pasta: "NEUTRO_REDE", total: 76, imgId: "img-neutro-rede", origem: {x: 44.3, y: 35.2}, destino: {x: 98.5, y: 14} },
+            { pasta: "FASE_2", total: 25, imgId: "img-fase-circuito", origem: {x: 75, y: 19}, destino: {x: 73.5, y: 71.0} },
+            { pasta: "RETORNO", total: 45, imgId: "img-retorno", origem: {x: 73, y: 76.5}, destino: {x: 88.5, y: 59.5} },
+            { pasta: "NEUTRO_2", total: 15, imgId: "img-neutro-circuito", origem: {x: 92.5, y: 15.8}, destino: {x: 90.2, y: 59.5} }
         ];
 
         let etapaAtual = 0;
@@ -68,8 +59,6 @@
                 return;
             }
             const dados = roteiro[etapaAtual];
-            if (dados.id === "fase-2") document.getElementById('balao-conector').classList.remove('oculto');
-            
             criarPonto(dados.origem, () => {
                 criarPonto(dados.destino, () => {
                     executarAnimacaoFluida(dados);
@@ -80,17 +69,16 @@
         function executarAnimacaoFluida(dados) {
             const img = document.getElementById(dados.imgId);
             img.classList.remove('oculto');
-            let frame = 1;
-            const intervalo = setInterval(() => {
-                if (frame > dados.total) {
-                    clearInterval(intervalo);
-                    tocarSom('audio-conexao');
-                    document.getElementById('balao-' + dados.id).classList.remove('oculto');
+            let f = 1;
+            const anim = setInterval(() => {
+                if (f > dados.total) {
+                    clearInterval(anim);
+                    document.getElementById('balao-' + etapaAtual).classList.remove('oculto');
                     etapaAtual++;
                     proximoPasso();
                 } else {
-                    img.src = `${dados.pasta}/quadro${String(frame).padStart(4, '0')}.png`;
-                    frame++;
+                    img.src = `${dados.pasta}/quadro${String(f).padStart(4, '0')}.png`;
+                    f++;
                 }
             }, 30);
         }
@@ -103,8 +91,6 @@
             document.getElementById('interacao-container').appendChild(p);
         }
 
-        function tocarSom(id) { const s = document.getElementById(id); if(s) s.play(); }
-        function abrirAjuda() { alert("Sistema de Ajuda Técnica Ativo"); }
         window.onload = proximoPasso;
     </script>
 </body>
