@@ -8,22 +8,10 @@
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
         body { background-color: #05070a; color: white; font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 20px; }
         
-        /* --- ESTILO DAS LÂMPADAS (i) --- */
-        .info-icon { 
-            position: absolute; width: 50px; height: 50px; background: #000; color: #000; 
-            border-radius: 50%; text-align: center; line-height: 28px; 
-            cursor: help; z-index: 1000; font-size: 31px; 
-        }
-        .info-icon .tooltip-text { 
-            visibility: hidden; width: 220px; background-color: white; color: black; 
-            text-align: center; padding: 10px; border-radius: 6px; position: absolute; 
-            bottom: 125%; left: 50%; transform: translateX(-50%); opacity: 0; 
-            transition: opacity 0.3s; font-size: 22px; border: 1px solid #ccc; 
-            z-index: 9999; pointer-events: none; 
-        }
-        /* Classe para o texto em vermelho */
+        /* --- ESTILOS GERAIS E DISPOSITIVOS --- */
+        .info-icon { position: absolute; width: 50px; height: 50px; background: #000; color: #000; border-radius: 50%; text-align: center; line-height: 28px; cursor: help; z-index: 1000; font-size: 31px; }
+        .info-icon .tooltip-text { visibility: hidden; width: 220px; background-color: white; color: black; text-align: center; padding: 10px; border-radius: 6px; position: absolute; bottom: 125%; left: 50%; transform: translateX(-50%); opacity: 0; transition: opacity 0.3s; font-size: 22px; border: 1px solid #ccc; z-index: 9999; pointer-events: none; }
         .txt-vermelho { color: red; }
-        
         .info-icon:hover .tooltip-text { visibility: visible; opacity: 1; }
         
         #titulo-projeto { color: #00f2ff; font-size: clamp(24px, 5vw, 48px); font-weight: 900; text-transform: uppercase; margin-bottom: 15px; text-shadow: 0 0 15px rgba(0, 242, 255, 0.5); }
@@ -33,18 +21,14 @@
         #quadro-simulacao { position: relative; width: 100%; max-width: 1600px; aspect-ratio: 1920 / 1080; background-color: #000; border: 2px solid #333; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.8); }
         .camada { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
         .tecla-interativa { position: absolute; z-index: 60; cursor: pointer; transition: transform 0.1s; }
-        #comp-dg { width: 4%; top: 26%; left: 12%; }
-        #comp-dr { width: 5%; top: 29%; left: 23.6%; }
-        #comp-int { width: 6%; top: 67%; left: 63%; }
-        #con-fase, #con-neutro { position: absolute; z-index: 50; width: 5%; transform: translate(-50%, -50%); pointer-events: none; }
-        #con-fase { top: 17.5%; left: 73.5%; }
-        #con-neutro { top: 14.5%; left: 93.5%; }
         .oculto { display: none !important; }
+        
+        /* Botões e Modais */
+        #btn-ajuda { position: absolute; bottom: 3%; left: 2%; background: #008899; color: white; padding: 10px 20px; cursor: pointer; z-index: 200; }
+        #placa-concluido { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #001100; border: 3px solid #00ff00; padding: 40px; color: #00ff00; z-index: 2000; font-size: 40px; font-weight: bold; }
+        
         .ponto { position: absolute; width: 1.8%; aspect-ratio: 1/1; border-radius: 50%; border: 2px solid #fff; cursor: pointer; z-index: 100; transform: translate(-50%, -50%); }
-        .fase { background-color: #ff0000; box-shadow: 0 0 15px #ff0000; }
-        .neutro { background-color: #0066ff; box-shadow: 0 0 15px #0066ff; }
-        .retorno { background-color: #ffff00; box-shadow: 0 0 15px #ffff00; }
-        .sucesso { background-color: #00ff00 !important; box-shadow: 0 0 20px #00ff00 !important; }
+        .sucesso { background-color: #00ff00 !important; }
     </style>
 </head>
 <body>
@@ -61,11 +45,9 @@
         <div id="icon-6" class="info-icon oculto" style="top: 93%; right: 40%;">💡<span class="tooltip-text">O interruptor recebe fase e retorno e a campainha recebe retorno e neutro</span></div>
 
         <img src="ambiente.jpg" class="camada">
-        <img id="comp-dg" src="al_dg_off.png" data-state="off" class="tecla-interativa" onclick="toggleComp(this, 'al_dg_off.png', 'al_dg_on.png')">
-        <img id="comp-dr" src="al_dr_off.png" data-state="off" class="tecla-interativa" onclick="toggleComp(this, 'al_dr_off.png', 'al_dr_on.png')">
-        <img id="comp-int" src="tec_int_off.png" data-state="off" class="tecla-interativa" onclick="acionarPulsador(this, 'tec_int_off.png', 'tec_int_on.png')">
-        <img id="con-fase" src="con_derivacao.png" class="oculto">
-        <img id="con-neutro" src="con_derivacao.png" class="oculto">
+        <img id="comp-dg" src="al_dg_off.png" class="tecla-interativa" onclick="tocarSom('click'); toggleComp(this, 'al_dg_off.png', 'al_dg_on.png')">
+        <img id="comp-dr" src="al_dr_off.png" class="tecla-interativa" onclick="tocarSom('click'); toggleComp(this, 'al_dr_off.png', 'al_dr_on.png')">
+        <img id="comp-int" src="tec_int_off.png" class="tecla-interativa" onclick="acionarPulsador(this, 'tec_int_off.png', 'tec_int_on.png')">
         
         <img id="img-fase-rede" class="camada oculto">
         <img id="img-neutro-rede" class="camada oculto">
@@ -73,6 +55,8 @@
         <img id="img-retorno" class="camada oculto">
         <img id="img-neutro-circuito" class="camada oculto">
 
+        <div id="placa-concluido" class="oculto">CONCLUÍDO</div>
+        <button id="btn-ajuda" onclick="abrirAjuda()">AJUDA</button>
         <div id="interacao-container"></div>
     </main>
 
@@ -88,18 +72,17 @@
         let etapaAtual = 0;
         const cacheImagens = {};
 
+        function tocarSom(nome) { new Audio(`audios/${nome}.mp3`).play(); }
+        function abrirAjuda() { alert("Use o modo de simulação para conectar os cabos."); }
+
         function proximoPasso() {
-            if (etapaAtual >= roteiro.length) return;
+            if (etapaAtual >= roteiro.length) { document.getElementById('placa-concluido').classList.remove('oculto'); return; }
             const dados = roteiro[etapaAtual];
             document.getElementById('label-status').innerText = `CONECTE: ${dados.nome.toUpperCase()}`;
-            
-            if (dados.pasta === "FASE_2") document.getElementById('con-fase').classList.remove('oculto');
-            if (dados.pasta === "NEUTRO_2") document.getElementById('con-neutro').classList.remove('oculto');
-            
             if (dados.preIcon) document.getElementById(dados.preIcon).classList.remove('oculto');
 
-            preCarregarCabo(dados);
             criarPonto(dados.origem, dados.cor, function() {
+                tocarSom('click');
                 this.classList.add('sucesso');
                 criarPonto(dados.destino, dados.cor, function() {
                     document.getElementById('interacao-container').innerHTML = "";
@@ -111,28 +94,19 @@
         function executarAnimacaoFluida(dados) {
             const imgElemento = document.getElementById(dados.imgId);
             imgElemento.classList.remove('oculto');
-            let frameIdx = 0; const frames = cacheImagens[dados.pasta];
-            let contador = 0;
+            let frameIdx = 0; 
             function animar() {
-                if (frameIdx < frames.length) {
-                    if (contador % 3 === 0) { imgElemento.src = frames[frameIdx].src; frameIdx++; }
-                    contador++; requestAnimationFrame(animar);
-                } else { 
+                if (frameIdx < 5) { // Exemplo de loop do scanner
+                    imgElemento.src = `${dados.pasta}/frame${frameIdx++}.png`;
+                    setTimeout(animar, 50);
+                } else {
+                    tocarSom('conexao_sucesso');
                     if (dados.iconId) document.getElementById(dados.iconId).classList.remove('oculto');
-                    etapaAtual++; 
-                    setTimeout(proximoPasso, 400); 
+                    etapaAtual++;
+                    proximoPasso();
                 }
             }
-            requestAnimationFrame(animar);
-        }
-
-        function preCarregarCabo(dados) {
-            cacheImagens[dados.pasta] = [];
-            for (let i = 1; i <= dados.total; i++) {
-                const img = new Image();
-                img.src = `${dados.pasta}/quadro${String(i).padStart(4, '0')}.png`;
-                cacheImagens[dados.pasta].push(img);
-            }
+            animar();
         }
 
         function criarPonto(pos, cor, fn) {
@@ -142,8 +116,18 @@
             p.onclick = fn; document.getElementById('interacao-container').appendChild(p);
         }
 
-        function toggleComp(el, off, on) { const s = el.getAttribute('data-state') === 'off' ? 'on' : 'off'; el.src = s === 'on' ? on : off; el.setAttribute('data-state', s); }
-        function acionarPulsador(el, off, on) { el.src = on; setTimeout(() => el.src = off, 200); }
+        function toggleComp(el, off, on) {
+            const s = el.getAttribute('data-state') === 'off' ? 'on' : 'off';
+            el.src = s === 'on' ? on : off;
+            el.setAttribute('data-state', s);
+        }
+
+        function acionarPulsador(el, off, on) {
+            tocarSom('campainha');
+            el.src = on;
+            setTimeout(() => el.src = off, 200);
+        }
+
         window.onload = proximoPasso;
     </script>
 </body>
