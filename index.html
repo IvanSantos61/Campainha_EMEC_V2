@@ -182,36 +182,49 @@
             atualizarQuadroPosicao();
         }
 
-        function acionarPulsador(el, off, on) {
-            tocarSom('audio-int');
-            el.src = on; 
-            el.setAttribute('data-state', 'on');
-            atualizarQuadroPosicao();
-            
-            const dgOn = document.getElementById('comp-dg').getAttribute('data-state') === 'on';
-            const drOn = document.getElementById('comp-dr').getAttribute('data-state') === 'on';
-            
-            if (etapaAtual >= roteiro.length && dgOn && drOn) { 
-                tocarSom('audio-campainha'); 
-            }
-            
-            setTimeout(() => { 
-                el.src = off; 
-                el.setAttribute('data-state', 'off');
-                atualizarQuadroPosicao();
+    let estaPulsando = false; // Bloqueio para evitar cliques duplos
 
-                if (etapaAtual >= roteiro.length && dgOn && drOn) { 
-                    setTimeout(() => {
-                        const placa = document.getElementById('placa-concluido');
-                        placa.classList.remove('oculto');
-                        placa.addEventListener('animationend', function handler() {
-                            placa.classList.add('oculto');
-                            placa.removeEventListener('animationend', handler);
-                        });
-                    }, 2000);
+function acionarPulsador(el, off, on) {
+    // Se já estiver pulsando, ignora novos cliques para evitar bugs
+    if (estaPulsando) return;
+    
+    estaPulsando = true;
+    tocarSom('audio-int');
+    
+    el.src = on; 
+    el.setAttribute('data-state', 'on');
+    atualizarQuadroPosicao();
+    
+    const dgOn = document.getElementById('comp-dg').getAttribute('data-state') === 'on';
+    const drOn = document.getElementById('comp-dr').getAttribute('data-state') === 'on';
+    
+    // Toca a campainha apenas se estiver tudo pronto
+    if (etapaAtual >= roteiro.length && dgOn && drOn) { 
+        tocarSom('audio-campainha'); 
+    }
+    
+    // Tempo para voltar ao estado original (feedback visual)
+    setTimeout(() => { 
+        el.src = off; 
+        el.setAttribute('data-state', 'off');
+        atualizarQuadroPosicao();
+        estaPulsando = false; // Libera para o próximo clique
+
+        // Verifica finalização
+        if (etapaAtual >= roteiro.length && dgOn && drOn) { 
+            setTimeout(() => {
+                const placa = document.getElementById('placa-concluido');
+                if (placa.classList.contains('oculto')) {
+                    placa.classList.remove('oculto');
+                    placa.addEventListener('animationend', function handler() {
+                        placa.classList.add('oculto');
+                        placa.removeEventListener('animationend', handler);
+                    });
                 }
-            }, 200);
+            }, 500);
         }
+    }, 300); // Aumentei levemente o tempo para dar um feedback visual melhor
+}
 
         function abrirAnimacaoConector() {
             const img = document.getElementById('img-tecnica-exibida');
