@@ -8,59 +8,80 @@
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
         body { background-color: #05070a; color: white; font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 20px; }
         
-        .info-icon { position: absolute; width: 25px; height: 25px; background: #00f2ff; color: #000; border-radius: 50%; text-align: center; line-height: 25px; font-weight: bold; cursor: help; z-index: 1000; font-size: 14px; }
-        .info-icon .tooltip-text { visibility: hidden; width: 220px; background-color: white; color: black; text-align: center; padding: 10px; border-radius: 6px; position: absolute; bottom: 125%; left: -100px; opacity: 0; transition: opacity 0.3s; font-size: 12px; border: 1px solid #ccc; font-weight: normal; z-index: 9999; }
-        .info-icon:hover .tooltip-text { visibility: visible; opacity: 1; }
-        .txt-vermelho { color: red; } /* Apenas a classe para o texto vermelho */
-
         #titulo-projeto { color: #00f2ff; font-size: clamp(24px, 5vw, 48px); font-weight: 900; text-transform: uppercase; margin-bottom: 15px; text-shadow: 0 0 15px rgba(0, 242, 255, 0.5); }
+        
         #linha-status { background: rgba(10, 15, 20, 0.9); border: 1px solid #1a3a5a; padding: 15px 30px; border-radius: 8px; margin-bottom: 20px; width: 100%; max-width: 1200px; text-align: center; }
         .texto-status { color: #ffcc00; font-size: clamp(16px, 2.5vw, 24px); font-weight: bold; text-transform: uppercase; }
+        
         #quadro-simulacao { position: relative; width: 100%; max-width: 1600px; aspect-ratio: 1920 / 1080; background-color: #000; border: 2px solid #333; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.8); }
         .camada { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
         .tecla-interativa { position: absolute; z-index: 60; cursor: pointer; transition: transform 0.1s; }
+        
         #comp-dg { width: 4%; top: 26%; left: 12%; }
         #comp-dr { width: 5%; top: 29%; left: 23.6%; }
         #comp-int { width: 6%; top: 67%; left: 63%; }
+
         #con-fase, #con-neutro { position: absolute; z-index: 50; width: 5%; transform: translate(-50%, -50%); pointer-events: none; }
         #con-fase { top: 17.5%; left: 73.5%; }
         #con-neutro { top: 14.5%; left: 93.5%; }
+
         .oculto { display: none !important; }
-        #painel-dispositivos { position: absolute; top: 25%; left: 59%; width: 15%; background: rgba(5, 15, 30, 0.95); border: 2px solid #00f2ff; border-radius: 8px; z-index: 500; }
-        #painel-dispositivos h3 { background: #008899; color: white; text-align: center; font-size: 1.1vw; padding: 8px; text-transform: uppercase; border-bottom: 2px solid #00f2ff; }
-        .linha-dispositivo { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; margin-bottom: 5px; background: rgba(255, 255, 255, 0.05); border-left: 4px solid #1a3a5a; font-weight: bold; font-size: 1vw; }
+
+        #painel-dispositivos {
+            position: absolute; top: 25%; left: 59%; width: 15%;
+            background: rgba(5, 15, 30, 0.95); border: 2px solid #00f2ff; border-radius: 8px; z-index: 500;
+        }
+
+        #painel-dispositivos h3 {
+            background: #008899; color: white; text-align: center; font-size: 1.1vw; padding: 8px; text-transform: uppercase; border-bottom: 2px solid #00f2ff;
+        }
+
+        .linha-dispositivo {
+            display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; margin-bottom: 5px; background: rgba(255, 255, 255, 0.05); border-left: 4px solid #1a3a5a; font-weight: bold; font-size: 1vw;
+        }
+
         .status-on { color: #00ff00; }
         .status-off { color: #ff3333; }
+
         .ponto { position: absolute; width: 1.8%; aspect-ratio: 1/1; border-radius: 50%; border: 2px solid #fff; cursor: pointer; z-index: 100; transform: translate(-50%, -50%); }
         .fase { background-color: #ff0000; box-shadow: 0 0 15px #ff0000; }
         .neutro { background-color: #0066ff; box-shadow: 0 0 15px #0066ff; }
         .retorno { background-color: #ffff00; box-shadow: 0 0 15px #ffff00; }
         .sucesso { background-color: #00ff00 !important; box-shadow: 0 0 20px #00ff00 !important; }
+
         #btn-ajuda { position: absolute; bottom: 10.5%; left: 15%; background: linear-gradient(180deg, #008899, #004455); color: white; border: 1px solid #00f2ff; padding: 0.6% 3.5%; font-size: 1.1vw; font-weight: bold; border-radius: 50px; cursor: pointer; z-index: 200; }
         #btn-reiniciar { position: absolute; bottom: 3%; left: 13.5%; background: linear-gradient(180deg, #cc0000, #880000); color: white; border: 1px solid #500; padding: 0.6% 3.5%; font-size: 1.1vw; font-weight: bold; border-radius: 50px; cursor: pointer; z-index: 200; }
+
         #overlay-ajuda { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); z-index: 1000; display: flex; justify-content: center; align-items: center; }
         .modal-ajuda { background: #0a1015; border: 2px solid #1a3a5a; width: 40%; padding: 30px; border-radius: 12px; text-align: center; }
+        
         .item-ajuda { background: rgba(255, 255, 255, 0.03); border: 1px solid #1a3a5a; margin-bottom: 10px; padding: 15px; color: white; text-align: left; cursor: pointer; font-weight: normal; font-size: 1.1vw; }
+        
         #visualizador-tecnico { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 1100; display: flex; flex-direction: column; justify-content: center; align-items: center; }
         #instrucao-clique { background: #ffcc00; color: #000; padding: 5px 15px; font-weight: bold; border-radius: 4px; margin-bottom: 15px; text-transform: uppercase; font-size: 1vw; animation: blink 1.5s infinite; }
+        
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
         .cursor-clique { cursor: pointer; }
     </style>
 </head>
 <body>
+
     <h1 id="titulo-projeto">LABORATÓRIO SMT PRO</h1>
-    <div id="linha-status"><span id="label-status" class="texto-status">SISTEMA PRONTO</span></div>
+
+    <div id="linha-status">
+        <span id="label-status" class="texto-status">SISTEMA PRONTO</span>
+    </div>
 
     <main id="quadro-simulacao">
-        <div id="icon-1" class="info-icon oculto" style="top: 10%; right: 5%;">💡<span class="tooltip-text">A seção mínima dos fios de iluminação é 1,5 mm² <span class="txt-vermelho">(Item 6.2.6.1.1 da NBR-5410)</span></span></div>
-        <div id="icon-2" class="info-icon oculto" style="top: 20%; right: 5%;">💡<span class="tooltip-text">A fase pode ser de qualquer cor <span class="txt-vermelho">(Item 6.1.5.3.4 da NBR-5410)</span></span></div>
-
         <img src="ambiente.jpg" class="camada">
+
         <img id="comp-dg" src="al_dg_off.png" data-state="off" class="tecla-interativa" onclick="toggleComp(this, 'al_dg_off.png', 'al_dg_on.png')">
         <img id="comp-dr" src="al_dr_off.png" data-state="off" class="tecla-interativa" onclick="toggleComp(this, 'al_dr_off.png', 'al_dr_on.png')">
         <img id="comp-int" src="tec_int_off.png" data-state="off" class="tecla-interativa" onclick="acionarPulsador(this, 'tec_int_off.png', 'tec_int_on.png')">
+
         <img id="con-fase" src="con_derivacao.png" class="oculto">
         <img id="con-neutro" src="con_derivacao.png" class="oculto">
+
         <img id="img-fase-rede" class="camada oculto">
         <img id="img-neutro-rede" class="camada oculto">
         <img id="img-fase-circuito" class="camada oculto">
@@ -116,29 +137,6 @@
         let etapaAtual = 0;
         const cacheImagens = {};
 
-        function proximoPasso() {
-            if (etapaAtual >= roteiro.length) {
-                document.getElementById('label-status').innerText = "INSTALAÇÃO CONCLUÍDA! TESTE A CAMPAINHA.";
-                document.getElementById('painel-dispositivos').classList.remove('oculto');
-                document.getElementById('icon-1').classList.remove('oculto');
-                document.getElementById('icon-2').classList.remove('oculto');
-                atualizarQuadroPosicao();
-                return;
-            }
-            const dados = roteiro[etapaAtual];
-            document.getElementById('label-status').innerText = `CONECTE: ${dados.nome.toUpperCase()}`;
-            if (dados.pasta === "FASE_2") document.getElementById('con-fase').classList.remove('oculto');
-            if (dados.pasta === "NEUTRO_2") document.getElementById('con-neutro').classList.remove('oculto');
-            preCarregarCabo(dados);
-            criarPonto(dados.origem, dados.cor, function() {
-                this.classList.add('sucesso');
-                criarPonto(dados.destino, dados.cor, function() {
-                    document.getElementById('interacao-container').innerHTML = "";
-                    executarAnimacaoFluida(dados);
-                });
-            });
-        }
-        
         function atualizarQuadroPosicao() {
             const dispositivos = [
                 { idComp: 'comp-dg', idTxt: 'txt-dg' },
@@ -165,15 +163,22 @@
             el.src = on; 
             el.setAttribute('data-state', 'on');
             atualizarQuadroPosicao();
+            
             const dgOn = document.getElementById('comp-dg').getAttribute('data-state') === 'on';
             const drOn = document.getElementById('comp-dr').getAttribute('data-state') === 'on';
-            if (etapaAtual >= roteiro.length && dgOn && drOn) { tocarSom('audio-campainha'); }
+            
+            if (etapaAtual >= roteiro.length && dgOn && drOn) { 
+                tocarSom('audio-campainha'); 
+            }
+            
             setTimeout(() => { 
                 el.src = off; 
                 el.setAttribute('data-state', 'off');
                 atualizarQuadroPosicao();
             }, 200);
         }
+
+        // ... demais funções permanecem conforme a lógica original ...
 
         function abrirAnimacaoConector() {
             const img = document.getElementById('img-tecnica-exibida');
@@ -182,7 +187,11 @@
             img.classList.add('cursor-clique');
             legenda.classList.remove('oculto');
             img.onclick = function() {
-                if (this.src.includes('conectder_on.png')) { this.src = 'conectder_off.png'; } else { this.src = 'conectder_on.png'; }
+                if (this.src.includes('conectder_on.png')) {
+                    this.src = 'conectder_off.png'; 
+                } else {
+                    this.src = 'conectder_on.png';
+                }
             };
             document.getElementById('visualizador-tecnico').classList.remove('oculto');
         }
@@ -199,6 +208,27 @@
         function voltarParaLista() {
             document.getElementById('visualizador-tecnico').classList.add('oculto');
             document.getElementById('instrucao-clique').classList.add('oculto');
+        }
+
+        function proximoPasso() {
+            if (etapaAtual >= roteiro.length) {
+                document.getElementById('label-status').innerText = "INSTALAÇÃO CONCLUÍDA! TESTE A CAMPAINHA.";
+                document.getElementById('painel-dispositivos').classList.remove('oculto');
+                atualizarQuadroPosicao();
+                return;
+            }
+            const dados = roteiro[etapaAtual];
+            document.getElementById('label-status').innerText = `CONECTE: ${dados.nome.toUpperCase()}`;
+            if (dados.pasta === "FASE_2") document.getElementById('con-fase').classList.remove('oculto');
+            if (dados.pasta === "NEUTRO_2") document.getElementById('con-neutro').classList.remove('oculto');
+            preCarregarCabo(dados);
+            criarPonto(dados.origem, dados.cor, function() {
+                this.classList.add('sucesso');
+                criarPonto(dados.destino, dados.cor, function() {
+                    document.getElementById('interacao-container').innerHTML = "";
+                    executarAnimacaoFluida(dados);
+                });
+            });
         }
 
         function preCarregarCabo(dados) {
@@ -235,6 +265,7 @@
         function abrirAjuda() { document.getElementById('overlay-ajuda').classList.remove('oculto'); }
         function fecharAjuda() { document.getElementById('overlay-ajuda').classList.add('oculto'); }
         function tocarSom(id) { const s = document.getElementById(id); if(s) { s.currentTime=0; s.play().catch(()=>{}); } }
+
         window.onload = proximoPasso;
     </script>
 </body>
