@@ -19,8 +19,8 @@
         /* Demais textos em Cyan pleno */
         .splash-subtitulo { font-size: 2.64em; color: #00f2ff; text-transform: uppercase; margin-bottom: 24px; font-weight: normal; }
         .splash-info { font-size: 1.8em; color: #00f2ff; margin-bottom: 48px; }
-        /* Créditos em cinza-claro *//* Créditos em cinza */
-.splash-footer { color: #808080; font-size: 1.08em; margin-bottom: 48px; }
+        /* Créditos em cinza */
+        .splash-footer { color: #808080; font-size: 1.08em; margin-bottom: 48px; }
         .btn-iniciar { 
             background: transparent; color: #00f2ff; border: 2.4px solid #00f2ff; padding: 18px 48px; 
             border-radius: 60px; font-size: 1.44em; cursor: pointer; animation: piscar 1.5s infinite;
@@ -81,24 +81,23 @@
         #instrucao-clique { background: #ffcc00; color: #000; padding: 5px 15px; font-weight: bold; border-radius: 4px; margin-bottom: 15px; text-transform: uppercase; font-size: 1vw; animation: blink 1.5s infinite; }
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
 
-        /* iniciar aqui */
         /* Transforma o botão Fechar do Modal de Ajuda em pílula */
-.modal-ajuda button {
-    border-radius: 50px !important;
-    padding: 12px 30px !important;
-    border: none !important;
-    cursor: pointer !important;
-    background-color: yellow !important;
-    color: black !important;
-}
+        .modal-ajuda button {
+            border-radius: 50px !important;
+            padding: 12px 30px !important;
+            border: none !important;
+            cursor: pointer !important;
+            background-color: yellow !important;
+            color: black !important;
+        }
 
-/* Transforma o botão Voltar do Visualizador Técnico em pílula */
-#visualizador-tecnico button {
-    border-radius: 50px !important;
-    padding: 10px 30px !important;
-    border: none !important;
-    cursor: pointer !important;
-}
+        /* Transforma o botão Voltar do Visualizador Técnico em pílula */
+        #visualizador-tecnico button {
+            border-radius: 50px !important;
+            padding: 10px 30px !important;
+            border: none !important;
+            cursor: pointer !important;
+        }
     </style>
 </head>
 <body>
@@ -122,9 +121,9 @@
     <main id="quadro-simulacao">
         <img src="ambiente.jpg" class="camada">  
 
-        <div id="placa-dicas" class="oculto" style="position: absolute; bottom: 0.5%; left: 29%; background: rgba(3, 8, 16, 0.9); border: 1px solid #00f2ff; border-radius: 6px; padding: 4px 15px; box-shadow: 0 0 10px rgba(0, 242, 255, 0.3); z-index: 200;">
-		    <span style="color: #00f2ff; font-weight: 400; font-size: 1vw; letter-spacing: 1px; text-transform: uppercase; text-shadow: 0 0 5px rgba(0, 242, 255, 0.6);">💡 Dicas ➜ </span>
-</div>
+        <div id="placa-dicas" class="oculto" style="position: absolute; bottom: 0.5%; left: 28%; background: #000000; border: 1px solid #00f2ff; border-radius: 6px; padding: 4px 15px; box-shadow: 0 0 10px rgba(0, 242, 255, 0.3); z-index: 200;">
+            <span style="color: #00f2ff; font-weight: 400; font-size: 1.2vw; letter-spacing: 1px; text-transform: uppercase; text-shadow: 0 0 5px rgba(0, 242, 255, 0.6);">💡 Dicas ➜ </span>
+        </div>
 
         <div id="balao-fase-rede" class="balao-info oculto" style="top: 93%; left: 40%;">💡
             <div class="texto-balao">A fase pode ser de qualquer cor <span style="color:red;">(Item 6.1.5.3.4 da NBR-5410)</span></div>
@@ -331,7 +330,7 @@
             document.getElementById('interacao-container').appendChild(ponto);
         }
 
-        function executarAnimacaoFluida(dados) {
+        function ejecutarAnimacaoFluida(dados) {
             const imgElemento = document.getElementById(dados.imgId);
             imgElemento.classList.remove('oculto');
             let frameIdx = 0; const frames = cacheImagens[dados.pasta];
@@ -342,7 +341,12 @@
                     contador++; requestAnimationFrame(animar);
                 } else { 
                     tocarSom('audio-conexao');
-                    if (dados.pasta === "FASE_REDE") document.getElementById('balao-fase-rede').classList.remove('oculto');
+                    
+                    // Modificação: Exibe o balão E revela a placa de dicas se o cabo for o FASE_REDE
+                    if (dados.pasta === "FASE_REDE") {
+                        document.getElementById('balao-fase-rede').classList.remove('oculto');
+                        document.getElementById('placa-dicas').classList.remove('oculto'); // Revela a placa aqui
+                    }
                     else if (dados.pasta === "NEUTRO_REDE") document.getElementById('balao-neutro-rede').classList.remove('oculto');
                     else if (dados.pasta === "FASE_2") document.getElementById('balao-fase-2').classList.remove('oculto');
                     else if (dados.pasta === "RETORNO") { document.getElementById('balao-retorno').classList.remove('oculto'); document.getElementById('balao-conector').classList.remove('oculto'); }
