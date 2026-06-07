@@ -14,12 +14,9 @@
             border: 2.4px solid #00f2ff; padding: 72px; border-radius: 24px; text-align: center; 
             box-shadow: 0 0 48px rgba(0, 242, 255, 0.5), inset 0 0 24px rgba(0, 242, 255, 0.2);
         }
-        /* Título com opacidade menor (0.4) e cor Cyan */
         .splash-titulo { font-size: 3.6em; color: rgba(0, 242, 255, 0.4); text-transform: uppercase; margin-bottom: 12px; font-weight: normal; }
-        /* Demais textos em Cyan pleno */
         .splash-subtitulo { font-size: 2.64em; color: #00f2ff; text-transform: uppercase; margin-bottom: 24px; font-weight: normal; }
         .splash-info { font-size: 1.8em; color: #00f2ff; margin-bottom: 48px; }
-        /* Créditos em cinza */
         .splash-footer { color: #808080; font-size: 1.08em; margin-bottom: 48px; }
         .btn-iniciar { 
             background: transparent; color: #00f2ff; border: 2.4px solid #00f2ff; padding: 18px 48px; 
@@ -27,7 +24,6 @@
         }
         @keyframes piscar { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-        /* Estilos mantidos conforme seu envio original */
         #titulo-projeto { color: #00f2ff; font-size: clamp(24px, 5vw, 48px); font-weight: 900; text-transform: uppercase; margin-bottom: 15px; text-shadow: 0 0 15px rgba(0, 242, 255, 0.5); }
         #linha-status { background: rgba(10, 15, 20, 0.9); border: 1px solid #1a3a5a; padding: 15px 30px; border-radius: 8px; margin-bottom: 20px; width: 100%; max-width: 1200px; text-align: center; }
         .texto-status { color: #ffcc00; font-size: clamp(16px, 2.5vw, 24px); font-weight: bold; text-transform: uppercase; }
@@ -81,23 +77,8 @@
         #instrucao-clique { background: #ffcc00; color: #000; padding: 5px 15px; font-weight: bold; border-radius: 4px; margin-bottom: 15px; text-transform: uppercase; font-size: 1vw; animation: blink 1.5s infinite; }
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
 
-        /* Transforma o botão Fechar do Modal de Ajuda em pílula */
-        .modal-ajuda button {
-            border-radius: 50px !important;
-            padding: 12px 30px !important;
-            border: none !important;
-            cursor: pointer !important;
-            background-color: yellow !important;
-            color: black !important;
-        }
-
-        /* Transforma o botão Voltar do Visualizador Técnico em pílula */
-        #visualizador-tecnico button {
-            border-radius: 50px !important;
-            padding: 10px 30px !important;
-            border: none !important;
-            cursor: pointer !important;
-        }
+        .modal-ajuda button { border-radius: 50px !important; padding: 12px 30px !important; border: none !important; cursor: pointer !important; background-color: yellow !important; color: black !important; }
+        #visualizador-tecnico button { border-radius: 50px !important; padding: 10px 30px !important; border: none !important; cursor: pointer !important; }
     </style>
 </head>
 <body>
@@ -121,7 +102,7 @@
     <main id="quadro-simulacao">
         <img src="ambiente.jpg" class="camada">  
 
-        <div id="placa-dicas" class="oculto" style="position: absolute; bottom: 0.5%; left: 28%; background: #000000; border: 1px solid #00f2ff; border-radius: 6px; padding: 4px 15px; box-shadow: 0 0 10px rgba(0, 242, 255, 0.3); z-index: 200;">
+        <div id="placa-dicas" style="display: none; position: absolute; bottom: 0.5%; left: 28%; background: #000000; border: 1px solid #00f2ff; border-radius: 6px; padding: 4px 15px; box-shadow: 0 0 10px rgba(0, 242, 255, 0.3); z-index: 200;">
             <span style="color: #00f2ff; font-weight: 400; font-size: 1.2vw; letter-spacing: 1px; text-transform: uppercase; text-shadow: 0 0 5px rgba(0, 242, 255, 0.6);">💡 Dicas ➜ </span>
         </div>
 
@@ -177,7 +158,7 @@
 
         <div id="overlay-ajuda" class="oculto">
             <div class="modal-ajuda">
-                <h2 style="color:#ffcc00; margin-bottom:20px;">Ajuda Técnica</h2>
+                <h2 style="color:#ffcc00; margin-bottom:20px;">Ajuda Técnico</h2>
                 <div class="item-ajuda" onclick="mostrarImagemTecnica('ligaint.png')">1. Ligação do interruptor pulsador</div>
                 <div class="item-ajuda" onclick="mostrarImagemTecnica('ligcamp.png')">2. Ligação da campainha</div>
                 <div class="item-ajuda" onclick="mostrarImagemTecnica('inst_con_der.png')">3. Conexões e emendas</div>
@@ -219,8 +200,10 @@
             ];
             dispositivos.forEach(disp => {
                 const el = document.getElementById(disp.idComp);
-                const isON = el.getAttribute('data-state') === 'on';
-                document.getElementById(disp.idTxt).innerHTML = isON ? `<span class="status-on">[ ON ] ✅</span>` : `<span class="status-off">[ OFF ] ❌</span>`;
+                if(el) {
+                    const isON = el.getAttribute('data-state') === 'on';
+                    document.getElementById(disp.idTxt).innerHTML = isON ? `<span class="status-on">[ ON ] ✅</span>` : `<span class="status-off">[ OFF ] ❌</span>`;
+                }
             });
         }
 
@@ -256,7 +239,7 @@
                 if (etapaAtual >= roteiro.length && dgOn && drOn) { 
                     setTimeout(() => {
                         const placa = document.getElementById('placa-concluido');
-                        if (placa.classList.contains('oculto')) {
+                        if (placa && placa.classList.contains('oculto')) {
                             placa.classList.remove('oculto');
                             placa.addEventListener('animationend', function handler() {
                                 placa.classList.add('oculto');
@@ -330,11 +313,14 @@
             document.getElementById('interacao-container').appendChild(ponto);
         }
 
-        function ejecutarAnimacaoFluida(dados) {
+        function executarAnimacaoFluida(dados) {
             const imgElemento = document.getElementById(dados.imgId);
+            if(!imgElemento) return;
+            
             imgElemento.classList.remove('oculto');
             let frameIdx = 0; const frames = cacheImagens[dados.pasta];
             let contador = 0;
+            
             function animar() {
                 if (frameIdx < frames.length) {
                     if (contador % 3 === 0) { imgElemento.src = frames[frameIdx].src; frameIdx++; }
@@ -342,10 +328,10 @@
                 } else { 
                     tocarSom('audio-conexao');
                     
-                    // Modificação: Exibe o balão E revela a placa de dicas se o cabo for o FASE_REDE
                     if (dados.pasta === "FASE_REDE") {
                         document.getElementById('balao-fase-rede').classList.remove('oculto');
-                        document.getElementById('placa-dicas').classList.remove('oculto'); // Revela a placa aqui
+                        // Exibe a placa de dicas injetando estilo de bloco de forma limpa e segura
+                        document.getElementById('placa-dicas').style.display = 'block'; 
                     }
                     else if (dados.pasta === "NEUTRO_REDE") document.getElementById('balao-neutro-rede').classList.remove('oculto');
                     else if (dados.pasta === "FASE_2") document.getElementById('balao-fase-2').classList.remove('oculto');
